@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Management.Dashboard.Models\Management.Dashboard.Models.csproj" />
+    <ProjectReference Include="..\Management.Dashboard.Repositories\Management.Dashboard.Repositories.csproj" />
+  </ItemGroup>
+
+</Project>
