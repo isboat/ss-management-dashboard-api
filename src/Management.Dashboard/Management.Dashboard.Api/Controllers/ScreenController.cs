@@ -18,12 +18,14 @@ namespace Management.Dashboard.Api.Controllers
         }
 
         [HttpGet("{tenantId}/screens")]
+        [ProducesResponseType(200)]
         public async Task<IEnumerable<ScreenModel>> Get(string tenantId)
         {
             return await _screenService.GetScreensAsync(tenantId);
         }
 
         [HttpGet("{tenantId}/screens/{id}")]
+        [ProducesResponseType(typeof(ScreenModel), 200)]
         public async Task<ScreenModel?> Get(string tenantId, string id)
         {
             return await _screenService.GetAsync(tenantId, id);
