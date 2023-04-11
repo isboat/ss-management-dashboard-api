@@ -1,6 +1,6 @@
 ﻿namespace Management.Dashboard.Models
 {
-    public class ScreenModel
+    public class ScreenModel: IModelItem
     {
         public string? Id { get; set; }
 
@@ -8,7 +8,9 @@
 
         public string? DisplayName { get; set; }
 
-        public DisplayItem? DisplayItem { get; set; }
+        public string? MenuEntityId { get; set; }
+
+        public string? MediaAssetEntityId { get; set; }
 
         public string? TemplateKey { get; set; }
 
