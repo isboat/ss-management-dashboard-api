@@ -34,7 +34,7 @@ namespace Management.Dashboard.Api.Controllers
         [HttpPost("{tenantId}/menus")]
         public async Task<ActionResult> Post(string tenantId, [FromBody] MenuModel model)
         {
-            if (string.IsNullOrEmpty(tenantId) || model == null)
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(model?.TenantId))
             {
                 return BadRequest();
             }
@@ -46,7 +46,7 @@ namespace Management.Dashboard.Api.Controllers
         [HttpPatch("{tenantId}/menus")]
         public async Task<ActionResult> Patch(string tenantId, [FromBody] MenuModel model)
         {
-            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(model?.Id))
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(model?.Id) || string.IsNullOrEmpty(model?.TenantId))
             {
                 return BadRequest();
             }

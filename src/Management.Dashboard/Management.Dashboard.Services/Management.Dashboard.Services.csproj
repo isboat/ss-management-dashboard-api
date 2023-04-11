@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.15.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Management.Dashboard.Models\Management.Dashboard.Models.csproj" />
     <ProjectReference Include="..\Management.Dashboard.Repositories\Management.Dashboard.Repositories.csproj" />
   </ItemGroup>

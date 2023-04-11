@@ -45,8 +45,13 @@ namespace Management.Dashboard.Api
 
         private static void RegisterServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddSingleton<IScreenRepository, ScreenRepository>();
+            builder.Services.AddSingleton<IRepository<ScreenModel>, ScreenRepository>();
+            builder.Services.AddSingleton<IRepository<MenuModel>, MenuRepository>();
+            builder.Services.AddSingleton<ITemplatesRepository, TemplatesRepository>();
+
             builder.Services.AddSingleton<IScreenService, ScreenService>();
+            builder.Services.AddSingleton<IMenuService, MenuService>();
+            builder.Services.AddSingleton<ITemplatesService, TemplatesService>();
         }
     }
 }

@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Management.Dashboard.Api", "Management.Dashboard.Api\Management.Dashboard.Api.csproj", "{D85762F5-4006-4C94-863B-08F32DC8A33B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management.Dashboard.Api", "Management.Dashboard.Api\Management.Dashboard.Api.csproj", "{D85762F5-4006-4C94-863B-08F32DC8A33B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Management.Dashboard.Models", "Management.Dashboard.Models\Management.Dashboard.Models.csproj", "{60C38888-7528-4FAF-B1D9-E8E39E7401BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management.Dashboard.Models", "Management.Dashboard.Models\Management.Dashboard.Models.csproj", "{60C38888-7528-4FAF-B1D9-E8E39E7401BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Management.Dashboard.Services", "Management.Dashboard.Services\Management.Dashboard.Services.csproj", "{FB7D8985-E76E-4B26-9372-FCFD29E5C826}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management.Dashboard.Services", "Management.Dashboard.Services\Management.Dashboard.Services.csproj", "{FB7D8985-E76E-4B26-9372-FCFD29E5C826}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Management.Dashboard.Repositories", "Management.Dashboard.Repositories\Management.Dashboard.Repositories.csproj", "{6E5B28C5-49ED-4651-AE99-288F103E07F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management.Dashboard.Repositories", "Management.Dashboard.Repositories\Management.Dashboard.Repositories.csproj", "{6E5B28C5-49ED-4651-AE99-288F103E07F5}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{77768BCC-0409-443C-9B2A-8E392777BE05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{6E5B28C5-49ED-4651-AE99-288F103E07F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E5B28C5-49ED-4651-AE99-288F103E07F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E5B28C5-49ED-4651-AE99-288F103E07F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77768BCC-0409-443C-9B2A-8E392777BE05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77768BCC-0409-443C-9B2A-8E392777BE05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77768BCC-0409-443C-9B2A-8E392777BE05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77768BCC-0409-443C-9B2A-8E392777BE05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

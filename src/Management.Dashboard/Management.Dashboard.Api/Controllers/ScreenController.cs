@@ -34,7 +34,7 @@ namespace Management.Dashboard.Api.Controllers
         [HttpPost("{tenantId}/screens")]
         public async Task<ActionResult> Post(string tenantId, [FromBody] ScreenModel screenModel)
         {
-            if (string.IsNullOrEmpty(tenantId) || screenModel == null)
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(screenModel?.TenantId))
             {
                 return BadRequest();
             }
@@ -46,12 +46,12 @@ namespace Management.Dashboard.Api.Controllers
         [HttpPatch("{tenantId}/screens")]
         public async Task<ActionResult> Patch(string tenantId, [FromBody] ScreenModel screenModel)
         {
-            if (string.IsNullOrEmpty(tenantId) || screenModel == null)
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(screenModel?.Id) || string.IsNullOrEmpty(screenModel?.TenantId))
             {
                 return BadRequest();
             }
 
-            await _screenService.CreateAsync(screenModel);
+            await _screenService.UpdateAsync(screenModel.Id, screenModel);
             return NoContent();
         }
 

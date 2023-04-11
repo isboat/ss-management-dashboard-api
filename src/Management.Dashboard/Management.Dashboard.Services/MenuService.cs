@@ -4,34 +4,40 @@ using Management.Dashboard.Services.Interfaces;
 
 namespace Management.Dashboard.Services
 {
-    public class ScreenService : IScreenService
+    public class MenuService : IMenuService
     {
-        private readonly IRepository<ScreenModel> _repository;
+        private readonly IRepository<MenuModel> _repository;
 
-        public ScreenService(IRepository<ScreenModel> repository)
+        public MenuService(IRepository<MenuModel> repository)
         {
             _repository = repository;
         }
 
-        public async Task<IEnumerable<ScreenModel>> GetScreensAsync(string tenantId) =>
+        public async Task<IEnumerable<MenuModel>> GetMenusAsync(string tenantId) =>
             await _repository.GetAllByTenantIdAsync(tenantId);
 
-        public async Task<ScreenModel?> GetAsync(string tenantId, string id) =>
+        public async Task<MenuModel?> GetAsync(string tenantId, string id) =>
             await _repository.GetAsync(tenantId, id);
 
-        public async Task CreateAsync(ScreenModel newModel)
+        public async Task CreateAsync(MenuModel newModel)
         {
             AddId(newModel);
+            foreach (var item in newModel.MenuItems ?? new List<MenuItem>())
+            {
+                AddId(item);
+            }
             await _repository.CreateAsync(newModel);
         }
 
         public async Task RemoveAsync(string tenantId, string id) =>
             await _repository.RemoveAsync(tenantId, id);
 
-        public async Task UpdateAsync(string id, ScreenModel updatedModel) =>
+        public async Task UpdateAsync(string id, MenuModel updatedModel)
+        {
             await _repository.UpdateAsync(id, updatedModel);
+        }
 
-        private static void AddId(ScreenModel newModel)
+        private static void AddId(IModelItem newModel)
         {
             newModel.Id = Guid.NewGuid().ToString("N");
         }

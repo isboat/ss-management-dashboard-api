@@ -1,4 +1,5 @@
 ﻿using Management.Dashboard.Models;
+using Management.Dashboard.Models.ViewModels;
 using Management.Dashboard.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace Management.Dashboard.Api.Controllers
 
         [HttpGet("templates")]
         [ProducesResponseType(200)]
-        public IEnumerable<KeyValuePair<string, IEnumerable<TemplatePropertyModel>>> Get()
+        public IEnumerable<TemplateViewModel> Get()
         {
             return _templatesService.GetTemplates();
         }
