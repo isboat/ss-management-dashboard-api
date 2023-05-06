@@ -1,5 +1,8 @@
-﻿using Management.Dashboard.Models;
+﻿using Amazon.Auth.AccessControlPolicy;
+using Management.Dashboard.Common.Constants;
+using Management.Dashboard.Models;
 using Management.Dashboard.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -8,7 +11,8 @@ namespace Management.Dashboard.Api.Controllers
 {
     [Route("api/v1/tenant")]
     [ApiController]
-    public class MediaController : ControllerBase
+    [Authorize(Policy = TenantAuthorization.RequiredPolicy)]
+    public class MediaController : CustomBaseController
     {
         private readonly IScreenService _screenService;
         private readonly IUploadService _uploadService;
@@ -21,12 +25,24 @@ namespace Management.Dashboard.Api.Controllers
             _uploadService = uploadService;
         }
 
-        [HttpPost("{tenantId}/media/upload")]
+        [HttpPost("media/upload")]
         [RequestSizeLimit(UploadMaxSixe)]
         [RequestFormLimits(MultipartBodyLengthLimit = UploadMaxSixe)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> Upload(string tenantId, List<IFormFile> files)
+        public async Task<ActionResult> Upload(List<IFormFile> files)
         {
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            if (files == null)
+            {
+                return BadRequest("files are null");
+            }
+
             var allowedFileExt = "jpg,png,mp4";
             if (string.IsNullOrEmpty(tenantId) || files == null) return BadRequest();
 

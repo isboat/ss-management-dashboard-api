@@ -9,7 +9,7 @@ namespace Management.Dashboard.Api.Controllers
 {
     [Route("api/v1")]
     [ApiController]
-    public class TemplatesController : ControllerBase
+    public class TemplatesController : CustomBaseController
     {
         private readonly ITemplatesService _templatesService;
 

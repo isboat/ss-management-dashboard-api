@@ -1,5 +1,8 @@
-﻿using Management.Dashboard.Models;
+﻿using Amazon.Auth.AccessControlPolicy;
+using Management.Dashboard.Common.Constants;
+using Management.Dashboard.Models;
 using Management.Dashboard.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -8,7 +11,8 @@ namespace Management.Dashboard.Api.Controllers
 {
     [Route("api/v1/tenant")]
     [ApiController]
-    public class ScreenController : ControllerBase
+    [Authorize(Policy = TenantAuthorization.RequiredPolicy)]
+    public class ScreenController : CustomBaseController
     {
         private readonly IScreenService _screenService;
 
