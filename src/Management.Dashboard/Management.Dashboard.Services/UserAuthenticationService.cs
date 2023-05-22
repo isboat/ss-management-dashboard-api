@@ -1,4 +1,5 @@
-﻿using Management.Dashboard.Models;
+﻿using Management.Dashboard.Common.Constants;
+using Management.Dashboard.Models;
 using Management.Dashboard.Models.Authentication;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services.Interfaces;
@@ -34,10 +35,11 @@ namespace Management.Dashboard.Services
             {
                 { "tenantid", dbUser.TenantId! },
                 { "email", dbUser.Email! },
+                { "scope", TenantAuthorization.RequiredScope },
             };
             var tokenResponse = new LoginResponseModel
             {
-                Token = _jwtService.GenerateToken(tokenData, DateTime.UtcNow.AddHours(2))
+                Token = _jwtService.GenerateToken(tokenData, DateTime.UtcNow.AddHours(1))
             };
 
             return tokenResponse;

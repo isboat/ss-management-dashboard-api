@@ -21,23 +21,45 @@ namespace Management.Dashboard.Api.Controllers
             _screenService = screenService;
         }
 
-        [HttpGet("{tenantId}/screens")]
+        [HttpGet("screens")]
         [ProducesResponseType(200)]
-        public async Task<IEnumerable<ScreenModel>> Get(string tenantId)
+        public async Task<IActionResult> Get()
         {
-            return await _screenService.GetScreensAsync(tenantId);
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            var data = await _screenService.GetScreensAsync(tenantId);
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            return new JsonResult(data);
         }
 
-        [HttpGet("{tenantId}/screens/{id}")]
+        [HttpGet("screens/{id}")]
         [ProducesResponseType(typeof(ScreenModel), 200)]
-        public async Task<ScreenModel?> Get(string tenantId, string id)
+        public async Task<IActionResult> Get(string id)
         {
-            return await _screenService.GetAsync(tenantId, id);
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            var data = await _screenService.GetAsync(tenantId, id);
+            return data != null ? new JsonResult(data) : NotFound();
         }
 
-        [HttpPost("{tenantId}/screens")]
-        public async Task<ActionResult> Post(string tenantId, [FromBody] ScreenModel screenModel)
+        [HttpPost("screens")]
+        public async Task<ActionResult> Post([FromBody] ScreenModel screenModel)
         {
+            var tenantId = GetRequestTenantId();
             if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(screenModel?.TenantId))
             {
                 return BadRequest();
@@ -47,9 +69,10 @@ namespace Management.Dashboard.Api.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{tenantId}/screens")]
-        public async Task<ActionResult> Patch(string tenantId, [FromBody] ScreenModel screenModel)
+        [HttpPatch("screens")]
+        public async Task<ActionResult> Patch([FromBody] ScreenModel screenModel)
         {
+            var tenantId = GetRequestTenantId();
             if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(screenModel?.Id) || string.IsNullOrEmpty(screenModel?.TenantId))
             {
                 return BadRequest();
@@ -59,9 +82,10 @@ namespace Management.Dashboard.Api.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{tenantId}/screens/{id}")]
-        public async Task<ActionResult> Delete(string tenantId, string id)
+        [HttpDelete("screens/{id}")]
+        public async Task<ActionResult> Delete(string id)
         {
+            var tenantId = GetRequestTenantId();
             if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id))
             {
                 return BadRequest();

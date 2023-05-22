@@ -21,23 +21,40 @@ namespace Management.Dashboard.Api.Controllers
             _menuService = menuService;
         }
 
-        [HttpGet("{tenantId}/menus")]
+        [HttpGet("menus")]
         [ProducesResponseType(200)]
-        public async Task<IEnumerable<MenuModel>> Get(string tenantId)
+        public async Task<IActionResult> Get()
         {
-            return await _menuService.GetMenusAsync(tenantId);
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            var data = await _menuService.GetMenusAsync(tenantId);
+            return data != null ? new JsonResult(data) : NotFound();
         }
 
-        [HttpGet("{tenantId}/menus/{id}")]
+        [HttpGet("menus/{id}")]
         [ProducesResponseType(typeof(MenuModel), 200)]
-        public async Task<MenuModel?> Get(string tenantId, string id)
+        public async Task<IActionResult> Get(string id)
         {
-            return await _menuService.GetAsync(tenantId, id);
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            var data = await _menuService.GetAsync(tenantId, id);
+            return data != null ? new JsonResult(data) : NotFound();
         }
 
-        [HttpPost("{tenantId}/menus")]
-        public async Task<ActionResult> Post(string tenantId, [FromBody] MenuModel model)
+        [HttpPost("menus")]
+        public async Task<IActionResult> Post([FromBody] MenuModel model)
         {
+            var tenantId = GetRequestTenantId();
             if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(model?.TenantId))
             {
                 return BadRequest();
@@ -47,9 +64,10 @@ namespace Management.Dashboard.Api.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{tenantId}/menus")]
-        public async Task<ActionResult> Patch(string tenantId, [FromBody] MenuModel model)
+        [HttpPatch("menus")]
+        public async Task<IActionResult> Patch([FromBody] MenuModel model)
         {
+            var tenantId = GetRequestTenantId();
             if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(model?.Id) || string.IsNullOrEmpty(model?.TenantId))
             {
                 return BadRequest();
@@ -59,9 +77,10 @@ namespace Management.Dashboard.Api.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{tenantId}/menus/{id}")]
-        public async Task<ActionResult> Delete(string tenantId, string id)
+        [HttpDelete("menus/{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
+            var tenantId = GetRequestTenantId();
             if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id))
             {
                 return BadRequest();
