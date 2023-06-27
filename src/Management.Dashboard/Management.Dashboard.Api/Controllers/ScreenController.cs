@@ -60,10 +60,12 @@ namespace Management.Dashboard.Api.Controllers
         public async Task<ActionResult> Post([FromBody] ScreenModel screenModel)
         {
             var tenantId = GetRequestTenantId();
-            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(screenModel?.TenantId))
+            if (string.IsNullOrEmpty(tenantId) || screenModel == null)
             {
                 return BadRequest();
             }
+
+            screenModel.TenantId = tenantId;
 
             await _screenService.CreateAsync(screenModel);
             return NoContent();
