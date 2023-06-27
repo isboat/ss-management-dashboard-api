@@ -55,10 +55,12 @@ namespace Management.Dashboard.Api.Controllers
         public async Task<IActionResult> Post([FromBody] MenuModel model)
         {
             var tenantId = GetRequestTenantId();
-            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(model?.TenantId))
+            if (string.IsNullOrEmpty(tenantId) || model == null)
             {
                 return BadRequest();
             }
+
+            model.TenantId = tenantId;
 
             await _menuService.CreateAsync(model);
             return NoContent();
