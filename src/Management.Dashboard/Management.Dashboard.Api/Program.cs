@@ -61,7 +61,7 @@ namespace Management.Dashboard.Api
                                   policy =>
                                   {
                                       policy.WithOrigins("http://localhost:4200",
-                                                          "http://www.contoso.com").AllowAnyHeader();
+                                                          "http://www.contoso.com").AllowAnyHeader().AllowAnyMethod();
                                   });
             });
         }
@@ -72,12 +72,16 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IRepository<MenuModel>, MenuRepository>();
             builder.Services.AddSingleton<ITemplatesRepository, TemplatesRepository>();
             builder.Services.AddSingleton<IUserRepository<UserModel>, UserRepository>();
+            builder.Services.AddSingleton<IRepository<AssetItemModel>, AssetRepository>();
 
             builder.Services.AddSingleton<IScreenService, ScreenService>();
+            builder.Services.AddSingleton<IAssetService, AssetService>();
             builder.Services.AddSingleton<IMenuService, MenuService>();
+            builder.Services.AddSingleton<IUploadService, LocalUploadService>();
             builder.Services.AddSingleton<ITemplatesService, TemplatesService>();
             builder.Services.AddSingleton<IJwtService, JwtService>();
             builder.Services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
+            builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
         }
 
         private static void RegisterJwtAuth(WebApplicationBuilder builder)

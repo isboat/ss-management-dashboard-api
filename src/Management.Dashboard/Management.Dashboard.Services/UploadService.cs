@@ -25,13 +25,12 @@ namespace Management.Dashboard.Services
             return result;
         }
 
-        public async Task<bool> UploadAsync(string tenantId, string fileName, Stream stream)
+        public async Task<string> UploadAsync(string tenantId, string fileName, Stream stream)
         {
             var container = _containerClientFactory.CreateAsync();
             var blob = container.GetBlobClient(CreatePath(tenantId, fileName));
             var result = await blob.UploadAsync(stream);
-
-            return true;
+            return fileName;
         }
 
         private static string CreatePath(string tenantId, string filename)

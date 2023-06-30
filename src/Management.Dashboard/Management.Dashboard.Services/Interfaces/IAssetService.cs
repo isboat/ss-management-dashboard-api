@@ -4,7 +4,7 @@ namespace Management.Dashboard.Services.Interfaces
 {
     public interface IAssetService
     {
-        Task<IEnumerable<AssetItemModel>> GetMenusAsync(string tenantId);
+        Task<IEnumerable<AssetItemModel>> GetAllAsync(string tenantId);
 
         Task<AssetItemModel?> GetAsync(string tenantId, string id);
 

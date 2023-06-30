@@ -13,7 +13,7 @@ namespace Management.Dashboard.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<AssetItemModel>> GetMenusAsync(string tenantId) =>
+        public async Task<IEnumerable<AssetItemModel>> GetAllAsync(string tenantId) =>
             await _repository.GetAllByTenantIdAsync(tenantId);
 
         public async Task<AssetItemModel?> GetAsync(string tenantId, string id) =>

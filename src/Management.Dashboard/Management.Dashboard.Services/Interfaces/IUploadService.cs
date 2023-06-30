@@ -3,6 +3,6 @@
     public interface IUploadService
     {
         Task<bool> RemoveAsync(string tenantId, string fileName);
-        Task<bool> UploadAsync(string tenantId, string fileName, Stream stream);
+        Task<string> UploadAsync(string tenantId, string fileName, Stream stream);
     }
 }
