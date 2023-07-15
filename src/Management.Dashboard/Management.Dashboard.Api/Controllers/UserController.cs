@@ -1,5 +1,7 @@
 ﻿using Amazon.Auth.AccessControlPolicy;
 using Management.Dashboard.Common.Constants;
+using Management.Dashboard.Models;
+using Management.Dashboard.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,29 +9,87 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Management.Dashboard.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/tenant")]
     [ApiController]
     [Authorize(Policy = TenantAuthorization.RequiredPolicy)]
-    public class UserController : ControllerBase
+    public class UserController : CustomBaseController
     {
+        private readonly IUserService _userService;
 
-        // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        public UserController(IUserService userService)
         {
-            return "value";
+            _userService = userService;
         }
 
-        // POST api/<UserController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpGet("users")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> Get()
         {
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            var data = await _userService.GetUsersAsync(tenantId);
+            return data != null ? new JsonResult(data) : NotFound();
         }
 
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpGet("users/{id}")]
+        [ProducesResponseType(typeof(MenuModel), 200)]
+        public async Task<IActionResult> Get(string id)
         {
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            var data = await _userService.GetAsync(tenantId, id);
+            return data != null ? new JsonResult(data) : NotFound();
+        }
+
+        [HttpPost("users")]
+        public async Task<IActionResult> Post([FromBody] UserModel model)
+        {
+            var tenantId = GetRequestTenantId();
+            if (string.IsNullOrEmpty(tenantId) || model == null)
+            {
+                return BadRequest();
+            }
+
+            model.TenantId = tenantId;
+
+            await _userService.CreateAsync(model);
+            return NoContent();
+        }
+
+        [HttpPatch("users")]
+        public async Task<IActionResult> Patch([FromBody] UserModel model)
+        {
+            var tenantId = GetRequestTenantId();
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(model?.Id) || string.IsNullOrEmpty(model?.TenantId))
+            {
+                return BadRequest();
+            }
+
+            await _userService.UpdateAsync(model.Id!, model);
+            return NoContent();
+        }
+
+        [HttpDelete("users/{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var tenantId = GetRequestTenantId();
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id))
+            {
+                return BadRequest();
+            }
+
+            await _userService.RemoveAsync(tenantId, id);
+            return NoContent();
         }
     }
 }

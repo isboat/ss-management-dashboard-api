@@ -1,6 +1,6 @@
 ﻿namespace Management.Dashboard.Models
 {
-    public class UserModel
+    public class UserModel : IModelItem
     {
         public string? Id { get; set; }
 

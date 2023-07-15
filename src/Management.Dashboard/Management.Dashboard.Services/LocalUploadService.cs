@@ -4,11 +4,8 @@ namespace Management.Dashboard.Services
 {
     public class LocalUploadService : IUploadService
     {
-        private readonly IAssetService _assetService;
-
-        public LocalUploadService(IAssetService assetService)
+        public LocalUploadService()
         {
-            _assetService = assetService;
         }
 
         public async Task<bool> RemoveAsync(string tenantId, string fileName)
