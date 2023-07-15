@@ -22,6 +22,7 @@ namespace Management.Dashboard.Services
         public async Task CreateAsync(UserModel newModel)
         {
             AddId(newModel);
+            newModel.Created = DateTime.UtcNow;
             await _repository.CreateAsync(newModel);
         }
 

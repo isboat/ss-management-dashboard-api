@@ -14,7 +14,9 @@
 
         public UserRoles? Role { get; set; }
 
-        public DateTime Created { get; set; }
+        public DateTime? Created { get; set; }
+
+        public DateTime? ModifiedDate { get; set; }
     }
 
     public enum UserRoles

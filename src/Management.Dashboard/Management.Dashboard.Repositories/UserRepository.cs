@@ -35,8 +35,21 @@ namespace Management.Dashboard.Repositories
         public async Task CreateAsync(UserModel newTenant) =>
             await _collection.InsertOneAsync(newTenant);
 
-        public async Task UpdateAsync(string id, UserModel updatedBook) =>
-            await _collection.ReplaceOneAsync(x => x.Id == id, updatedBook);
+        public async Task UpdateAsync(string id, UserModel updateModel)
+        {
+            if (updateModel == null) return;
+
+            var existingUser = await this.GetAsync(updateModel?.TenantId!, id);
+            if (existingUser == null) return;
+
+            existingUser.ModifiedDate = DateTime.UtcNow;
+            existingUser.Name = updateModel.Name;
+            existingUser.Email = updateModel.Email;
+            existingUser.Password = updateModel.Password;
+            existingUser.Role = updateModel.Role;
+
+            await _collection.ReplaceOneAsync(x => x.Id == id, existingUser);
+        }
 
         public async Task RemoveAsync(string tenantId, string id) =>
             await _collection.DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
