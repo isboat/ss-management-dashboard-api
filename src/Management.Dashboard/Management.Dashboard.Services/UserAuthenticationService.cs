@@ -37,6 +37,10 @@ namespace Management.Dashboard.Services
                 { "email", dbUser.Email! },
                 { "scope", TenantAuthorization.RequiredScope },
             };
+            if (dbUser.Role.HasValue)
+            {
+                tokenData.Add("role", dbUser.Role.Value.ToString());
+            }
             var tokenResponse = new LoginResponseModel
             {
                 Token = _jwtService.GenerateToken(tokenData, DateTime.UtcNow.AddHours(24))
