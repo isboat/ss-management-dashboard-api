@@ -32,8 +32,8 @@ namespace Management.Dashboard.Api.Controllers
 
             deviceModel.TenantId = tenantId;
 
-            await _devicesService.ApproveAsync(deviceModel);
-            return NoContent();
+            var result = await _devicesService.ApproveAsync(deviceModel);
+            return result ? NoContent() : BadRequest();
         }
     }
 }

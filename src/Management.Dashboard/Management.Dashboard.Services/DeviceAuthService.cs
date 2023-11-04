@@ -12,7 +12,7 @@ namespace Management.Dashboard.Services
         {
             _repository = repository;
         }
-        public async Task ApproveAsync(DeviceAuthModel updatedModel) =>
+        public async Task<bool> ApproveAsync(DeviceAuthModel updatedModel) =>
             await _repository.ApproveAsync(updatedModel);
 
         public async Task CreateAsync(DeviceAuthModel newModel)

@@ -47,17 +47,18 @@ namespace Management.Dashboard.Repositories
             await _collection.ReplaceOneAsync(x => x.Id == id, existingUser);
         }
 
-        public async Task ApproveAsync(DeviceAuthModel updateModel)
+        public async Task<bool> ApproveAsync(DeviceAuthModel updateModel)
         {
-            if (updateModel == null) return;
+            if (updateModel == null) return false;
 
             var existingUser = await _collection.Find(x => x.UserCode == updateModel.UserCode).FirstOrDefaultAsync();
-            if (existingUser == null) return;
+            if (existingUser == null) return false;
 
             existingUser.ApprovedDatetime = DateTime.UtcNow;
             existingUser.TenantId = updateModel?.TenantId;
 
-            await _collection.ReplaceOneAsync(x => x.Id == existingUser.Id, existingUser);
+            var result = await _collection.ReplaceOneAsync(x => x.Id == existingUser.Id, existingUser);
+            return result.IsAcknowledged;
         }
 
         public async Task RemoveAsync(string tenantId, string id) =>
