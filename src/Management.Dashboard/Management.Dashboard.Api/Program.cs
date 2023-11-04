@@ -72,9 +72,12 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IRepository<MenuModel>, MenuRepository>();
             builder.Services.AddSingleton<ITemplatesRepository, TemplatesRepository>();
             builder.Services.AddSingleton<IUserRepository<UserModel>, UserRepository>();
+            builder.Services.AddSingleton<IDeviceAuthRepository<DeviceAuthModel>, DeviceAuthRepository>();
             builder.Services.AddSingleton<IRepository<AssetItemModel>, AssetRepository>();
 
             builder.Services.AddSingleton<IScreenService, ScreenService>();
+            builder.Services.AddSingleton<IDevicesService, DevicesService>();
+            builder.Services.AddSingleton<IDeviceAuthService, DeviceAuthService>();
             builder.Services.AddSingleton<IAssetService, AssetService>();
             builder.Services.AddSingleton<IMenuService, MenuService>();
             builder.Services.AddSingleton<IUserService, UserService>();
