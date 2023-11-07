@@ -10,7 +10,7 @@ namespace Management.Dashboard.Services
 
         public async Task<bool> RemoveAsync(string tenantId, string fileName)
         {
-            return true;
+            return await Task.FromResult(true);
         }
 
         public async Task<string> UploadAsync(string tenantId, string fileName, Stream stream)
@@ -20,7 +20,7 @@ namespace Management.Dashboard.Services
             var filePath = Path.Combine(uploads,fileName);
             stream.CopyTo(new FileStream(filePath, FileMode.Create));  
 
-            return filePath;
+            return await Task.FromResult(filePath);
         }
 
         private static string CreatePath(string tenantId)

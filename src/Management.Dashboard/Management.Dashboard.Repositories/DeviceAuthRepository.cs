@@ -15,16 +15,21 @@ namespace Management.Dashboard.Repositories
             _client = new MongoClient(
             settings.Value.ConnectionString);
 
-            var mongoDatabase = _client.GetDatabase("DeviceCodeRegistration");
+            var mongoDatabase = _client.GetDatabase("device-app-db");
 
-            _collection = mongoDatabase.GetCollection<DeviceAuthModel>("Users");
+            _collection = mongoDatabase.GetCollection<DeviceAuthModel>("DeviceCodeRegistration");
         }
 
-        public async Task<List<DeviceAuthModel>> GetAllByTenantIdAsync(string tenantId) =>
-            await _collection.Find(x => x.TenantId == tenantId).ToListAsync();
+        public async Task<List<DeviceAuthModel>> GetAllByTenantIdAsync(string tenantId)
+        {
+            var items = _collection.Find(x => x.TenantId == tenantId);
+            return items != null ? await items.ToListAsync() : new List<DeviceAuthModel>();
+        }
 
-        public async Task<List<DeviceAuthModel>> GetAsync() =>
-            await _collection.Find(_ => true).ToListAsync();
+        public async Task<List<DeviceAuthModel>> GetAsync()
+        {
+            return await _collection.Find(_ => true).ToListAsync();
+        }
 
         public async Task<DeviceAuthModel?> GetAsync(string tenantId, string id) =>
             await _collection.Find(x => x.Id == id && x.TenantId == tenantId).FirstOrDefaultAsync();
@@ -42,23 +47,27 @@ namespace Management.Dashboard.Repositories
             var existingUser = await this.GetAsync(updateModel?.TenantId!, id);
             if (existingUser == null) return;
 
-            existingUser.DeviceName = updateModel?.DeviceName;
+            if (!string.IsNullOrEmpty(updateModel?.DeviceName))
+                existingUser.DeviceName = updateModel?.DeviceName;
+
+            if (!string.IsNullOrEmpty(updateModel?.ScreenId))
+                existingUser.ScreenId = updateModel?.ScreenId;
 
             await _collection.ReplaceOneAsync(x => x.Id == id, existingUser);
         }
 
-        public async Task<bool> ApproveAsync(DeviceAuthModel updateModel)
+        public async Task<DeviceAuthApprovalStatus> ApproveAsync(DeviceAuthModel updateModel)
         {
-            if (updateModel == null) return false;
+            if (updateModel == null) return DeviceAuthApprovalStatus.BadRequest;
 
             var existingUser = await _collection.Find(x => x.UserCode == updateModel.UserCode).FirstOrDefaultAsync();
-            if (existingUser == null) return false;
+            if (existingUser == null) return DeviceAuthApprovalStatus.NotFound;
 
             existingUser.ApprovedDatetime = DateTime.UtcNow;
             existingUser.TenantId = updateModel?.TenantId;
 
             var result = await _collection.ReplaceOneAsync(x => x.Id == existingUser.Id, existingUser);
-            return result.IsAcknowledged;
+            return result.IsAcknowledged ? DeviceAuthApprovalStatus.Success : DeviceAuthApprovalStatus.Failed;
         }
 
         public async Task RemoveAsync(string tenantId, string id) =>

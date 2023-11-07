@@ -14,9 +14,9 @@ namespace Management.Dashboard.Api.Controllers
     [Authorize(Policy = TenantAuthorization.RequiredPolicy)]
     public class DevicesController : CustomBaseController
     {
-        private readonly IDevicesService _devicesService;
+        private readonly IDeviceAuthService _devicesService;
 
-        public DevicesController(IDevicesService devicesService)
+        public DevicesController(IDeviceAuthService devicesService)
         {
             _devicesService = devicesService;
         }
@@ -32,7 +32,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            var data = await _devicesService.GetDevicesAsync(tenantId);
+            var data = await _devicesService.GetApprovedDevicesAsync(tenantId);
             if (data == null)
             {
                 return NotFound();
@@ -56,44 +56,43 @@ namespace Management.Dashboard.Api.Controllers
             return data != null ? new JsonResult(data) : NotFound();
         }
 
-        [HttpPost("devices")]
-        public async Task<ActionResult> Post([FromBody] DeviceModel deviceModel)
+
+        [HttpPatch("devices/{id}/name")]
+        public async Task<ActionResult> PatchName(string id, [FromBody] DeviceUpdateRequestModel model)
         {
             var tenantId = GetRequestTenantId();
-            if (string.IsNullOrEmpty(tenantId) || deviceModel == null)
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(model?.Id))
             {
                 return BadRequest();
             }
 
-            deviceModel.TenantId = tenantId;
+            await _devicesService.UpdateAsync(model.Id, new DeviceAuthModel 
+            { 
+                Id = model.Id, 
+                DeviceName = model.DeviceName, 
+                TenantId = tenantId
+            });
 
-            await _devicesService.CreateAsync(deviceModel);
             return NoContent();
         }
 
-        [HttpPatch("devices")]
-        public async Task<ActionResult> Patch([FromBody] DeviceModel deviceModel)
+
+        [HttpPatch("devices/{id}/screen")]
+        public async Task<ActionResult> Patch(string id, [FromBody] DeviceUpdateRequestModel model)
         {
             var tenantId = GetRequestTenantId();
-            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(deviceModel?.Id) || string.IsNullOrEmpty(deviceModel?.TenantId))
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(model?.Id))
             {
                 return BadRequest();
             }
 
-            await _devicesService.UpdateAsync(deviceModel.Id, deviceModel);
-            return NoContent();
-        }
-
-        [HttpDelete("devices/{id}")]
-        public async Task<ActionResult> Delete(string id)
-        {
-            var tenantId = GetRequestTenantId();
-            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id))
+            await _devicesService.UpdateAsync(model.Id, new DeviceAuthModel
             {
-                return BadRequest();
-            }
+                Id = model.Id,
+                ScreenId = model.ScreenId,
+                TenantId = tenantId
+            });
 
-            await _devicesService.RemoveAsync(tenantId, id);
             return NoContent();
         }
     }

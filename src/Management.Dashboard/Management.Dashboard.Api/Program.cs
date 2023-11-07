@@ -1,4 +1,5 @@
 
+using Management.Dashboard.Common;
 using Management.Dashboard.Common.Constants;
 using Management.Dashboard.Models;
 using Management.Dashboard.Repositories;
@@ -87,6 +88,8 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IJwtService, JwtService>();
             builder.Services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
+
+            builder.Services.AddSingleton<IDateTimeProvider, SystemDatetimeProvider>();
         }
 
         private static void RegisterJwtAuth(WebApplicationBuilder builder)

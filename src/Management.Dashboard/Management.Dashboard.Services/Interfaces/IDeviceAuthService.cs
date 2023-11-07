@@ -4,9 +4,9 @@ namespace Management.Dashboard.Services.Interfaces
 {
     public interface IDeviceAuthService
     {
-        public Task<bool> ApproveAsync( DeviceAuthModel updatedModel);
+        public Task<DeviceAuthApprovalStatus> ApproveAsync( DeviceAuthModel updatedModel);
 
-        Task<IEnumerable<DeviceAuthModel>> GetDevicesAsync(string tenantId);
+        Task<IEnumerable<DeviceAuthModel>> GetApprovedDevicesAsync(string tenantId);
 
         Task<DeviceAuthModel?> GetAsync(string tenantId, string id);
 

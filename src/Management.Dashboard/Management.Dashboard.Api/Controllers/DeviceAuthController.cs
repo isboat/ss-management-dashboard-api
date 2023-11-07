@@ -1,6 +1,6 @@
-﻿using Amazon.Auth.AccessControlPolicy;
-using Management.Dashboard.Common.Constants;
+﻿using Management.Dashboard.Common.Constants;
 using Management.Dashboard.Models;
+using Management.Dashboard.Models.ViewModels;
 using Management.Dashboard.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,18 +22,29 @@ namespace Management.Dashboard.Api.Controllers
         }
 
         [HttpPost("device/auth")]
-        public async Task<ActionResult> Post([FromBody] DeviceAuthModel deviceModel)
+        public async Task<ActionResult> Post([FromBody] DeviceAuthRequestModel deviceAuthRequest)
         {
             var tenantId = GetRequestTenantId();
-            if (string.IsNullOrEmpty(tenantId) || deviceModel == null)
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(deviceAuthRequest.UserCode))
             {
                 return BadRequest();
             }
 
-            deviceModel.TenantId = tenantId;
+            var model = new DeviceAuthModel
+            {
+                UserCode = deviceAuthRequest.UserCode.ToUpperInvariant(),
+                TenantId = tenantId,
+            };
+            var result = await _devicesService.ApproveAsync(model);
 
-            var result = await _devicesService.ApproveAsync(deviceModel);
-            return result ? NoContent() : BadRequest();
+            return result switch
+            {
+                DeviceAuthApprovalStatus.Success => NoContent(),
+                DeviceAuthApprovalStatus.Failed => BadRequest(),
+                DeviceAuthApprovalStatus.NotFound => NotFound(),
+                DeviceAuthApprovalStatus.BadRequest => BadRequest(),
+                _ => BadRequest(),
+            };
         }
     }
 }

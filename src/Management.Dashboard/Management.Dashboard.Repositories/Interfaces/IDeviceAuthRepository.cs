@@ -6,6 +6,6 @@ namespace Management.Dashboard.Repositories.Interfaces
     {
         Task<T?> GetByDeviceUsercodeAsync(string deviceUsercode);
 
-        Task<bool> ApproveAsync(DeviceAuthModel updateModel);
+        Task<DeviceAuthApprovalStatus> ApproveAsync(DeviceAuthModel updateModel);
     }
 }

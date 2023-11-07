@@ -8,7 +8,7 @@ namespace Management.Dashboard.Repositories
     public class DeviceRepository : IRepository<DeviceModel>
     {
         private readonly MongoClient _client;
-        private readonly string CollectionName = "Screens";
+        private readonly string CollectionName = "Devices";
 
         public DeviceRepository(IOptions<MongoSettings> settings)
         {
