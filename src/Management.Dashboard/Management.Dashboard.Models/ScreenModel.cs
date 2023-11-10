@@ -15,5 +15,7 @@
         public string? TemplateKey { get; set; }
 
         public IEnumerable<TemplatePropertyModel>? TemplateProperties { get; set; }
+
+        public string? ExternalMediaSource { get; set; }
     }
 }

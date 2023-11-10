@@ -76,6 +76,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IDeviceAuthRepository<DeviceAuthModel>, DeviceAuthRepository>();
             builder.Services.AddSingleton<IRepository<AssetItemModel>, AssetRepository>();
             builder.Services.AddSingleton<IRepository<DeviceModel>, DeviceRepository>();
+            builder.Services.AddSingleton<ITenantRepository, TenantRepository>();
 
             builder.Services.AddSingleton<IScreenService, ScreenService>();
             builder.Services.AddSingleton<IDevicesService, DevicesService>();

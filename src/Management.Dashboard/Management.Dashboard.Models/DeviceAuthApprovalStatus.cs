@@ -5,6 +5,9 @@
         Success,
         Failed,
         NotFound,
-        BadRequest
+        BadRequest,
+        TenantNotFound,
+        DeviceLimitReached,
+        AlreadyApproved
     }
 }

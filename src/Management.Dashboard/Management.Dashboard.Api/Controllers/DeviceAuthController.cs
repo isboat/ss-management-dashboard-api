@@ -43,6 +43,9 @@ namespace Management.Dashboard.Api.Controllers
                 DeviceAuthApprovalStatus.Failed => BadRequest(),
                 DeviceAuthApprovalStatus.NotFound => NotFound(),
                 DeviceAuthApprovalStatus.BadRequest => BadRequest(),
+                DeviceAuthApprovalStatus.TenantNotFound => BadRequest(),
+                DeviceAuthApprovalStatus.DeviceLimitReached => BadRequest("device_limit_reached"),
+                DeviceAuthApprovalStatus.AlreadyApproved => BadRequest("already_approved"),
                 _ => BadRequest(),
             };
         }

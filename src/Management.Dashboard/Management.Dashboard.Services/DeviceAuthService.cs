@@ -8,15 +8,28 @@ namespace Management.Dashboard.Services
     public class DeviceAuthService : IDeviceAuthService
     {
         private readonly IDeviceAuthRepository<DeviceAuthModel> _repository;
+        private readonly ITenantRepository _tenantRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public DeviceAuthService(IDeviceAuthRepository<DeviceAuthModel> repository, IDateTimeProvider dateTimeProvider)
+        public DeviceAuthService(IDeviceAuthRepository<DeviceAuthModel> repository, IDateTimeProvider dateTimeProvider, ITenantRepository tenantRepository)
         {
             _repository = repository;
             _dateTimeProvider = dateTimeProvider;
+            _tenantRepository = tenantRepository;
         }
-        public async Task<DeviceAuthApprovalStatus> ApproveAsync(DeviceAuthModel updatedModel) =>
-            await _repository.ApproveAsync(updatedModel);
+        public async Task<DeviceAuthApprovalStatus> ApproveAsync(DeviceAuthModel updatedModel)
+        {
+            var tenant = await _tenantRepository.GetAsync(updatedModel.TenantId);
+            if (string.IsNullOrEmpty(tenant?.Id)) return DeviceAuthApprovalStatus.TenantNotFound;
+
+            var currentTvs = await _repository.GetAllByTenantIdAsync(tenant.Id);
+            if (currentTvs.Count >= tenant.TvAppsLimit)
+            {
+                return DeviceAuthApprovalStatus.DeviceLimitReached;
+            }
+
+            return await _repository.ApproveAsync(updatedModel);
+        }
 
         public async Task CreateAsync(DeviceAuthModel newModel)
         {

@@ -62,6 +62,7 @@ namespace Management.Dashboard.Repositories
 
             var existingUser = await _collection.Find(x => x.UserCode == updateModel.UserCode).FirstOrDefaultAsync();
             if (existingUser == null) return DeviceAuthApprovalStatus.NotFound;
+            if (existingUser.ApprovedDatetime != null) return DeviceAuthApprovalStatus.AlreadyApproved;
 
             existingUser.ApprovedDatetime = DateTime.UtcNow;
             existingUser.TenantId = updateModel?.TenantId;
