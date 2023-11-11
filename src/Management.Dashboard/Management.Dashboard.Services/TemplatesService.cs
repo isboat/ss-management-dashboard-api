@@ -16,38 +16,38 @@ namespace Management.Dashboard.Services
 
         public IEnumerable<TemplateViewModel> GetTemplates()
         {
-            var templates = new List<TemplateViewModel>();
-            var menuBasic = new TemplateViewModel
+            var templates = new List<TemplateViewModel>
             {
-                Key = TemplateKeys.MenuBasic,
-                RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuBasic)
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.MenuOverlay,
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuOverlay)
+                },
+
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.MenuOnly,
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuOnly)
+                },
+
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.MediaOnly,
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MediaOnly)
+                },
+
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.MenuTopAndMediaBottom,
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuTopAndMediaBottom)
+                },
+
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.MediaTopAndMenuBottom,
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MediaTopAndMenuBottom)
+                }
             };
-
-            templates.Add(menuBasic);
-
-
-            var menuOverlay = new TemplateViewModel
-            {
-                Key = TemplateKeys.MenuOverlay,
-                RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuOverlay)
-            };
-            templates.Add(menuOverlay);
-
-
-            var a2 = new TemplateViewModel
-            {
-                Key = TemplateKeys.A2,
-                RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.A2)
-            };
-            templates.Add(a2);
-
-
-            var a3 = new TemplateViewModel
-            {
-                Key = TemplateKeys.A3,
-                RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.A3)
-            };
-            templates.Add(a2);
 
             return templates;
         }

@@ -88,6 +88,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<ITemplatesService, TemplatesService>();
             builder.Services.AddSingleton<IJwtService, JwtService>();
             builder.Services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
+            builder.Services.AddSingleton<IPreviewService, PreviewService>();
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 
             builder.Services.AddSingleton<IDateTimeProvider, SystemDatetimeProvider>();

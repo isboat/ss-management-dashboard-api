@@ -16,20 +16,20 @@ namespace Management.Dashboard.Repositories
             {
                 case TemplateKeys.MenuOverlay:
                     return MenuOverlayProperties();
-                case TemplateKeys.A2:
+                case TemplateKeys.MenuTopAndMediaBottom:
                     return MenuOverlayProperties();
-                case TemplateKeys.A3:
+                case TemplateKeys.MediaTopAndMenuBottom:
                     return MenuOverlayProperties();
-                case TemplateKeys.MenuBasic:
+                case TemplateKeys.MenuOnly:
                     return MenuOverlayProperties();
                 default:
                     break;
             }
 
-            throw new ArgumentOutOfRangeException();
+            return new List<TemplatePropertyModel>();  
         }
 
-        private IEnumerable<TemplatePropertyModel> MenuOverlayProperties()
+        private static IEnumerable<TemplatePropertyModel> MenuOverlayProperties()
         {
             return new List<TemplatePropertyModel> 
             { 

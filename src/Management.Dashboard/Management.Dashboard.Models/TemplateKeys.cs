@@ -2,13 +2,10 @@
 {
     public class TemplateKeys
     {
-        // menu on screen templates: BEGIN
-        public const string MenuBasic = "MenuBasic";
-
-        // menu on screen templates: END
-
         public const string MenuOverlay = "MenuOverlay";
-        public const string A2 = "A2";
-        public const string A3 = "A3";
+        public const string MenuOnly = "MenuOnly";
+        public const string MediaOnly = "MediaOnly";
+        public const string MenuTopAndMediaBottom = "MenuTopAndMediaBottom";
+        public const string MediaTopAndMenuBottom = "MediaTopAndMenuBottom";
     }
 }
