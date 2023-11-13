@@ -13,9 +13,36 @@ namespace Management.Dashboard.Services
             _repository = repository;
         }
 
-        Task<ScreenModel?> IPreviewService.GetDataAsync(string tenantId, string id)
+        public async Task<PreviewScreenModel?> GetDataAsync(string tenantId, string id)
         {
-            throw new NotImplementedException();
+            var screen = await _repository.GetAsync(tenantId, id);
+            if (screen == null) return null;
+
+            var screenDetails = PreviewScreenModel.ToDetails(screen);
+
+            if (!string.IsNullOrEmpty(screenDetails.MenuEntityId))
+            {
+                screenDetails.Menu = GetMenuDetails(screenDetails.MenuEntityId);
+            }
+
+            if (!string.IsNullOrEmpty(screenDetails.MediaAssetEntityId))
+            {
+                screenDetails.MediaAsset = GetMediaAssetDetails(screenDetails.MediaAssetEntityId);
+            }
+
+            return screenDetails;
+        }
+
+        private MenuModel? GetMenuDetails(string? itemId)
+        {
+            return null;
+            //throw new NotImplementedException();
+        }
+
+        private AssetItemModel? GetMediaAssetDetails(string? itemId)
+        {
+            return null;
+            //throw new NotImplementedException();
         }
     }
 }
