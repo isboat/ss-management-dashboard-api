@@ -43,7 +43,7 @@ namespace Management.Dashboard.Services
             }
             var tokenResponse = new LoginResponseModel
             {
-                Token = _jwtService.GenerateToken(tokenData, DateTime.UtcNow.AddHours(24))
+                Token = _jwtService.GenerateToken(tokenData, DateTime.UtcNow.AddHours(100))
             };
 
             return tokenResponse;

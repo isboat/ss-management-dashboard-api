@@ -7,10 +7,17 @@ namespace Management.Dashboard.Services
     public class PreviewService : IPreviewService
     {
         private readonly IRepository<ScreenModel> _repository;
+        private readonly IRepository<AssetItemModel> _mediaRepository;
+        private readonly IRepository<MenuModel> _menuRepository;
 
-        public PreviewService(IRepository<ScreenModel> repository)
+        public PreviewService(
+            IRepository<ScreenModel> repository, 
+            IRepository<AssetItemModel> mediaRepository, 
+            IRepository<MenuModel> menuRepository)
         {
             _repository = repository;
+            _mediaRepository = mediaRepository;
+            _menuRepository = menuRepository;
         }
 
         public async Task<PreviewScreenModel?> GetDataAsync(string tenantId, string id)
@@ -22,27 +29,27 @@ namespace Management.Dashboard.Services
 
             if (!string.IsNullOrEmpty(screenDetails.MenuEntityId))
             {
-                screenDetails.Menu = GetMenuDetails(screenDetails.MenuEntityId);
+                screenDetails.Menu = await GetMenuDetails(tenantId, screenDetails.MenuEntityId);
             }
 
             if (!string.IsNullOrEmpty(screenDetails.MediaAssetEntityId))
             {
-                screenDetails.MediaAsset = GetMediaAssetDetails(screenDetails.MediaAssetEntityId);
+                screenDetails.MediaAsset = await GetMediaAssetDetails(tenantId, screenDetails.MediaAssetEntityId);
             }
 
             return screenDetails;
         }
 
-        private MenuModel? GetMenuDetails(string? itemId)
+        private async Task<MenuModel?> GetMenuDetails(string tenantId, string itemId)
         {
-            return null;
-            //throw new NotImplementedException();
+            var menu = await _menuRepository.GetAsync(tenantId, itemId);
+            return menu;
         }
 
-        private AssetItemModel? GetMediaAssetDetails(string? itemId)
+        private async Task<AssetItemModel?> GetMediaAssetDetails(string tenantId, string itemId)
         {
-            return null;
-            //throw new NotImplementedException();
+            var asset = await _mediaRepository.GetAsync(tenantId, itemId);
+            return asset;
         }
     }
 }

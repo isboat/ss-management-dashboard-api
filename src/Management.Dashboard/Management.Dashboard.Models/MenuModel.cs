@@ -18,6 +18,10 @@ namespace Management.Dashboard.Models
 
         public string? Title { get; set; }
 
+        public string? Currency { get; set; }
+
+        public string? IconUrl { get; set; }
+
         public IEnumerable<MenuItem>? MenuItems { get; set; }
     }
 
@@ -33,6 +37,6 @@ namespace Management.Dashboard.Models
 
         public string? Title { get; set; }
 
-        public decimal? Price { get; set; }
+        public string? Price { get; set; }
     }
 }
