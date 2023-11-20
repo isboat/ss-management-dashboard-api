@@ -8,4 +8,12 @@
         public const string MenuTopAndMediaBottom = "MenuTopAndMediaBottom";
         public const string MediaTopAndMenuBottom = "MediaTopAndMenuBottom";
     }
+
+
+    public class MenuSubTypeKeys
+    {
+        public const string Basic = "Basic";
+        public const string Premium = "Premium";
+        public const string Deluxe = "Deluxe";
+    }
 }

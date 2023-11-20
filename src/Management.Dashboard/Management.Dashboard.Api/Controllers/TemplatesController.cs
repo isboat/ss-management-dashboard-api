@@ -24,5 +24,12 @@ namespace Management.Dashboard.Api.Controllers
         {
             return _templatesService.GetTemplates();
         }
+
+        [HttpGet("menu-subtype-templates")]
+        [ProducesResponseType(200)]
+        public IEnumerable<MenuSubTypeViewModel> GetMenuTemplates()
+        {
+            return _templatesService.GetUIMenuSubTypes();
+        }
     }
 }

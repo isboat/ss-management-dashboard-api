@@ -16,6 +16,17 @@
 
         public IEnumerable<TemplatePropertyModel>? TemplateProperties { get; set; }
 
+        public LayoutModel? Layout { get; set; }
+
         public string? ExternalMediaSource { get; set; }
+    }
+
+    public class LayoutModel
+    {
+        public string? TemplateKey { get; set; }
+
+        public IEnumerable<TemplatePropertyModel>? TemplateProperties { get; set; }
+
+        public string? MenuSubType { get; set; }
     }
 }

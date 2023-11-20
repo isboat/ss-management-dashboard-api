@@ -16,8 +16,16 @@ namespace Management.Dashboard.Services
         public async Task<IEnumerable<ScreenModel>> GetScreensAsync(string tenantId) =>
             await _repository.GetAllByTenantIdAsync(tenantId);
 
-        public async Task<ScreenModel?> GetAsync(string tenantId, string id) =>
-            await _repository.GetAsync(tenantId, id);
+        public async Task<ScreenModel?> GetAsync(string tenantId, string id)
+        {
+            var screen = await _repository.GetAsync(tenantId, id);
+            if (screen == null) return null;
+
+            screen.Layout ??= new();
+            screen.Layout.TemplateProperties ??= new List<TemplatePropertyModel>();
+
+            return screen;
+        }
 
         public async Task CreateAsync(ScreenModel newModel)
         {
