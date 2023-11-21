@@ -1,6 +1,8 @@
-﻿namespace Management.Dashboard.Models
-{
+﻿using MongoDB.Bson.Serialization.Attributes;
 
+namespace Management.Dashboard.Models
+{
+    [BsonIgnoreExtraElements]
     public class DeviceAuthModel
     {
         public DateTime? RegisteredDatetime { get; set; }

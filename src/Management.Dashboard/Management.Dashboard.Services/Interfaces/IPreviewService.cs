@@ -4,6 +4,6 @@ namespace Management.Dashboard.Services.Interfaces
 {
     public interface IPreviewService
     {
-        Task<PreviewScreenModel?> GetDataAsync(string tenantId, string id);
+        Task<DetailedScreenModel?> GetDataAsync(string tenantId, string id);
     }
 }

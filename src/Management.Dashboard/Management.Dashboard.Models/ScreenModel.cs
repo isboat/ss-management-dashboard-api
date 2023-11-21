@@ -1,5 +1,8 @@
-﻿namespace Management.Dashboard.Models
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace Management.Dashboard.Models
 {
+    [BsonIgnoreExtraElements]
     public class ScreenModel: IModelItem
     {
         public string? Id { get; set; }
@@ -11,10 +14,6 @@
         public string? MenuEntityId { get; set; }
 
         public string? MediaAssetEntityId { get; set; }
-
-        public string? TemplateKey { get; set; }
-
-        public IEnumerable<TemplatePropertyModel>? TemplateProperties { get; set; }
 
         public LayoutModel? Layout { get; set; }
 

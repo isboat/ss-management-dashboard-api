@@ -77,6 +77,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IRepository<AssetItemModel>, AssetRepository>();
             builder.Services.AddSingleton<IRepository<DeviceModel>, DeviceRepository>();
             builder.Services.AddSingleton<ITenantRepository, TenantRepository>();
+            builder.Services.AddSingleton<IPublishRepository, PublishRepository>();
 
             builder.Services.AddSingleton<IScreenService, ScreenService>();
             builder.Services.AddSingleton<IDevicesService, DevicesService>();
@@ -89,6 +90,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IJwtService, JwtService>();
             builder.Services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddSingleton<IPreviewService, PreviewService>();
+            builder.Services.AddSingleton<IPublishService, PublishService>();
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 
             builder.Services.AddSingleton<IDateTimeProvider, SystemDatetimeProvider>();

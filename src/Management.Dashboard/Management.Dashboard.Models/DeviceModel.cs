@@ -1,5 +1,8 @@
-﻿namespace Management.Dashboard.Models
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace Management.Dashboard.Models
 {
+    [BsonIgnoreExtraElements]
     public class DeviceModel : IModelItem
     {
         public string? Id { get; set; }

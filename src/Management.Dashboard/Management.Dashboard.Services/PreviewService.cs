@@ -20,12 +20,12 @@ namespace Management.Dashboard.Services
             _menuRepository = menuRepository;
         }
 
-        public async Task<PreviewScreenModel?> GetDataAsync(string tenantId, string id)
+        public async Task<DetailedScreenModel?> GetDataAsync(string tenantId, string id)
         {
             var screen = await _repository.GetAsync(tenantId, id);
             if (screen == null) return null;
 
-            var screenDetails = PreviewScreenModel.ToDetails(screen);
+            var screenDetails = DetailedScreenModel.ToDetails(screen);
 
             if (!string.IsNullOrEmpty(screenDetails.MenuEntityId))
             {
