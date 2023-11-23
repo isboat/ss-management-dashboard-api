@@ -50,6 +50,11 @@ namespace Management.Dashboard.Services
             await _repository.UpdateAsync(id, updatedModel);
         }
 
+        public async Task DeleteAsync(string tenantId, string id)
+        {
+            await _repository.RemoveAsync(tenantId, id);
+        }
+
         private bool IsApproved(DeviceAuthModel model)
         {
             return model?.ApprovedDatetime != null

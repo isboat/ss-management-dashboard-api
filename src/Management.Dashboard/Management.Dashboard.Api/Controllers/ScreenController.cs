@@ -15,10 +15,12 @@ namespace Management.Dashboard.Api.Controllers
     public class ScreenController : CustomBaseController
     {
         private readonly IScreenService _screenService;
+        private readonly IPublishService _publishService;
 
-        public ScreenController(IScreenService screenService)
+        public ScreenController(IScreenService screenService, IPublishService publishService)
         {
             _screenService = screenService;
+            _publishService = publishService;
         }
 
         [HttpGet("screens")]
@@ -94,6 +96,7 @@ namespace Management.Dashboard.Api.Controllers
             }
 
             await _screenService.RemoveAsync(tenantId, id);
+            _ = _publishService.ArchiveDataAsync(tenantId, id);
             return NoContent();
         }
     }

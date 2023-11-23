@@ -13,5 +13,7 @@ namespace Management.Dashboard.Services.Interfaces
         public Task CreateAsync(DeviceAuthModel newModel);
 
         public Task UpdateAsync(string id, DeviceAuthModel updatedModel);
+
+        public Task DeleteAsync(string tenantId, string id);
     }
 }

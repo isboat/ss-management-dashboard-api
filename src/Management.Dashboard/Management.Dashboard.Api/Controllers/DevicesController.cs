@@ -95,5 +95,20 @@ namespace Management.Dashboard.Api.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("devices/{id}")]
+        [ProducesResponseType(typeof(DeviceModel), 200)]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id))
+            {
+                return BadRequest();
+            }
+
+            await _devicesService.DeleteAsync(tenantId, id);
+            return Ok();
+        }
     }
 }

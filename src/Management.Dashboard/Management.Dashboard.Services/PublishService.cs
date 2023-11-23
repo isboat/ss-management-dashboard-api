@@ -22,5 +22,10 @@ namespace Management.Dashboard.Services
 
             return await _repository.PublishScreenAsync(screenData);
         }
+
+        public async Task<bool> ArchiveDataAsync(string tenantId, string id)
+        {
+            return await _repository.ArchiveScreenAsync(tenantId, id);
+        }
     }
 }
