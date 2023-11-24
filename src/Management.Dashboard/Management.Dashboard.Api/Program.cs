@@ -62,7 +62,7 @@ namespace Management.Dashboard.Api
                                   policy =>
                                   {
                                       policy.WithOrigins("http://localhost:4200",
-                                                          "http://www.contoso.com").AllowAnyHeader().AllowAnyMethod();
+                                                          "http://localhost:4401").AllowAnyHeader().AllowAnyMethod();
                                   });
             });
         }

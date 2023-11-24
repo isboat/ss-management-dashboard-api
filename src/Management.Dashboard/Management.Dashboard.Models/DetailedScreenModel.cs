@@ -1,9 +1,14 @@
-﻿namespace Management.Dashboard.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Management.Dashboard.Models
 {
+    [Serializable]
     public class DetailedScreenModel : ScreenModel
     {
         public MenuModel? Menu { get; set; }
         public AssetItemModel? MediaAsset { get; set; }
+
+        public string? Checksum { get; set; }
 
         public static DetailedScreenModel ToDetails(ScreenModel screen)
         {

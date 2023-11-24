@@ -1,4 +1,5 @@
-﻿using Management.Dashboard.Repositories.Interfaces;
+﻿using Management.Dashboard.Common;
+using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services.Interfaces;
 
 namespace Management.Dashboard.Services
@@ -19,6 +20,8 @@ namespace Management.Dashboard.Services
         {
             var screenData = await _previewService.GetDataAsync(tenantId, id);
             if (screenData == null) return false;
+
+            screenData.Checksum = MD5HashGenerator.GenerateKey(screenData);
 
             return await _repository.PublishScreenAsync(screenData);
         }
