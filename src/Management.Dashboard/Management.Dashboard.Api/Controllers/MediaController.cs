@@ -41,11 +41,11 @@ namespace Management.Dashboard.Api.Controllers
             return data != null ? new JsonResult(data) : NotFound();
         }
 
-        [HttpPost("media-asset/upload")]
+        [HttpPost("media-assets")]
         [RequestSizeLimit(UploadMaxSixe)]
         [RequestFormLimits(MultipartBodyLengthLimit = UploadMaxSixe)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> Upload([FromForm]MediaUploadModel model)
+        public async Task<ActionResult> PostNew([FromForm]MediaUploadModel model)
         {
             var tenantId = GetRequestTenantId();
 
@@ -54,57 +54,76 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            if (model?.File == null)
+            var storagePath = "";
+            long size = 0;
+            string fileName = "";
+
+            if (model.IsAi)
             {
-                return BadRequest("file is null");
-            }
-
-            var allowedFileExt = "image/jpeg,image/png,mp4";
-
-            
-            if (!allowedFileExt.Contains(model.File.ContentType))
+                
+            }else
             {
-                return BadRequest($"{model.File.ContentType} Not allowed");
-            }
 
-            long size = model.File.Length;
-
-            if (model.File.Length > 0)
-            {
-                await using var stream = model.File.OpenReadStream();
-                var storagePath = await _uploadService.UploadAsync(tenantId, model.File.FileName.ToLowerInvariant(), stream);
-                if (!string.IsNullOrEmpty(storagePath))
+                if (model?.File == null)
                 {
-                    await _assetService.CreateAsync(
-                        new AssetItemModel
-                        {
-                            AssetUrl = storagePath,
-                            Name = model.Title,
-                            TenantId = tenantId,
-                            Id = Guid.NewGuid().ToString("D"),
-                            Description = model.Description,
-                            Type = AssetType.Image
-                        });
+                    return BadRequest("file is null");
                 }
+
+                var allowedFileExt = "image/jpeg,image/png,mp4";            
+                if (!allowedFileExt.Contains(model.File.ContentType))
+                {
+                    return BadRequest($"{model.File.ContentType} Not allowed");
+                }
+
+                size = model.File.Length;
+
+                if (model.File.Length > 0)
+                {
+                    await using var stream = model.File.OpenReadStream();
+                    storagePath = await _uploadService.UploadAsync(tenantId, model.File.FileName.ToLowerInvariant(), stream);
+                    fileName = model.File.FileName;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(storagePath))
+            {
+                await _assetService.CreateAsync(
+                    new AssetItemModel
+                    {
+                        AssetUrl = storagePath,
+                        Name = model.Title,
+                        TenantId = tenantId,
+                        Id = Guid.NewGuid().ToString("D"),
+                        Description = model.Description,
+                        Type = AssetType.Image
+                    });
             }
 
             // Process uploaded files
             // Don't rely on or trust the FileName property without validation.
 
-            return Ok(new { filename = model.File.FileName, size });
+            return Ok(new { filename = fileName, size });
         }
 
-        [HttpDelete("{tenantId}/media-asset/{filename}")]
-        public async Task<ActionResult> Delete(string tenantId, string filename)
+        [HttpDelete("media-assets/{id}")]
+        public async Task<ActionResult> Delete(string id)
         {
-            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(filename))
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId))
             {
                 return BadRequest();
             }
 
-            await _uploadService.RemoveAsync(tenantId, filename.ToLowerInvariant());
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id))
+            {
+                return BadRequest();
+            }
+
+            await _uploadService.RemoveAsync(tenantId, id.ToLowerInvariant());
             return NoContent();
         }
+
     }
 
     public class MediaUploadModel
@@ -112,6 +131,9 @@ namespace Management.Dashboard.Api.Controllers
         public string Title { get; set; }
 
         public string Description { get; set; }
-        public IFormFile File { get; set; }
+
+        public bool IsAi { get; set; }
+
+        public IFormFile? File { get; set; }
     }
 }

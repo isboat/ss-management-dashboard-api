@@ -22,20 +22,22 @@ namespace Management.Dashboard.Services
                 {
                     Key = TemplateKeys.MenuOverlay,
                     Label = "Menu Overlay",
-                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuOverlay)
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuOverlay),
+                    SubTypes = GetMenuSubTypes()
                 },
 
                 new TemplateViewModel
                 {
                     Key = TemplateKeys.MenuOnly,
-                    Label = "Menu Only",
-                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuOnly)
+                    Label = "Show Menu Only",
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuOnly),
+                    SubTypes = GetMenuSubTypes()
                 },
 
                 new TemplateViewModel
                 {
                     Key = TemplateKeys.MediaOnly,
-                    Label = "Media Only",
+                    Label = "Show Media Only",
                     RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MediaOnly)
                 },
 
@@ -43,38 +45,74 @@ namespace Management.Dashboard.Services
                 {
                     Key = TemplateKeys.MenuTopAndMediaBottom,
                     Label = "Menu top and Media bottom",
-                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuTopAndMediaBottom)
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MenuTopAndMediaBottom),
+                    SubTypes = GetMenuSubTypes()
                 },
 
                 new TemplateViewModel
                 {
                     Key = TemplateKeys.MediaTopAndMenuBottom,
                     Label = "Media top and menu bottom",
-                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MediaTopAndMenuBottom)
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MediaTopAndMenuBottom),
+                    SubTypes = GetMenuSubTypes()
+                },
+
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.Text,
+                    Label = "Show Text",
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.Text)
+                },
+
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.DateTime,
+                    Label = "Show Date and time",
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.DateTime),
+                    SubTypes = GetDateSubTypes()
                 }
             };
 
             return templates;
         }
 
-        public IEnumerable<MenuSubTypeViewModel> GetUIMenuSubTypes()
+        private static IEnumerable<SubTypeViewModel> GetMenuSubTypes()
         {
-            var list = new List<MenuSubTypeViewModel>
+            var list = new List<SubTypeViewModel>
             {
-                new MenuSubTypeViewModel
+                new SubTypeViewModel
                 {
                     Key = MenuSubTypeKeys.Basic,
                     Label = "Basic"
                 },
-                new MenuSubTypeViewModel
+                new SubTypeViewModel
                 {
                     Key = MenuSubTypeKeys.Premium,
                     Label = "Premium"
                 },
-                new MenuSubTypeViewModel
+                new SubTypeViewModel
                 {
                     Key = MenuSubTypeKeys.Deluxe,
                     Label = "Deluxe"
+                }
+            };
+
+            return list;
+        }
+
+        private static IEnumerable<SubTypeViewModel> GetDateSubTypes()
+        {
+            var list = new List<SubTypeViewModel>
+            {
+                new SubTypeViewModel
+                {
+                    Key = DateTimeSubTypeKeys.British,
+                    Label = "dd/mm/yyyy tt:mm:ss"
+                },
+                new SubTypeViewModel
+                {
+                    Key = DateTimeSubTypeKeys.American,
+                    Label = "mm/dd/yyyy tt:mm:ss"
                 }
             };
 

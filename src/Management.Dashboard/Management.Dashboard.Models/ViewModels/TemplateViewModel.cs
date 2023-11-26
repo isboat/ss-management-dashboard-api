@@ -13,9 +13,10 @@ namespace Management.Dashboard.Models.ViewModels
         public string? Label { get; set; }
 
         public IEnumerable<TemplatePropertyModel>? RequiredProperties { get; set; }
+        public IEnumerable<SubTypeViewModel> SubTypes { get; set; }
     }
 
-    public class MenuSubTypeViewModel
+    public class SubTypeViewModel
     {
         public string? Key { get; set; }
 

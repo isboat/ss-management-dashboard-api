@@ -22,6 +22,10 @@ namespace Management.Dashboard.Repositories
                     return MenuOverlayProperties();
                 case TemplateKeys.MenuOnly:
                     return MenuOverlayProperties();
+                case TemplateKeys.Text:
+                    return TextProperties();
+                case TemplateKeys.DateTime:
+                    return TextProperties();
                 default:
                     break;
             }
@@ -36,6 +40,16 @@ namespace Management.Dashboard.Repositories
                 new TemplatePropertyModel{ Key = "textColor", Label = "Text Color" },
                 new TemplatePropertyModel { Key = "textFont", Label = "Text Font" },
                 new TemplatePropertyModel { Key = "backgroundOpacity", Label = "Background Opacity" }
+            };
+        }
+
+        private static IEnumerable<TemplatePropertyModel> TextProperties()
+        {
+            return new List<TemplatePropertyModel>
+            {
+                new TemplatePropertyModel{ Key = "textColor", Label = "Text Color" },
+                new TemplatePropertyModel { Key = "textFont", Label = "Text Font" },
+                new TemplatePropertyModel { Key = "text-align", Label = "Text Align" }
             };
         }
     }

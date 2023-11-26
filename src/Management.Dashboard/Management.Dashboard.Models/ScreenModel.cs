@@ -20,12 +20,13 @@ namespace Management.Dashboard.Models
         public string? ExternalMediaSource { get; set; }
     }
 
+    [BsonIgnoreExtraElements]
     public class LayoutModel
     {
         public string? TemplateKey { get; set; }
 
         public IEnumerable<TemplatePropertyModel>? TemplateProperties { get; set; }
 
-        public string? MenuSubType { get; set; }
+        public string? SubType { get; set; }
     }
 }
