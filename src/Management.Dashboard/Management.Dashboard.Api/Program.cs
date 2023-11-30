@@ -91,6 +91,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddSingleton<IPreviewService, PreviewService>();
             builder.Services.AddSingleton<IPublishService, PublishService>();
+            builder.Services.AddSingleton<IAiService, AiService>();
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 
             builder.Services.AddSingleton<IDateTimeProvider, SystemDatetimeProvider>();

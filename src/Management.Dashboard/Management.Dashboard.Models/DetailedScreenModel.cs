@@ -20,6 +20,7 @@ namespace Management.Dashboard.Models
                 MenuEntityId = screen.MenuEntityId,
                 MediaAssetEntityId = screen.MediaAssetEntityId,
                 ExternalMediaSource = screen.ExternalMediaSource,
+                TextEditorData = screen.TextEditorData,
                 Layout = screen.Layout
             };
 

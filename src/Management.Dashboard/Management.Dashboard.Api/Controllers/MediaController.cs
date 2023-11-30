@@ -17,13 +17,15 @@ namespace Management.Dashboard.Api.Controllers
     {
         private readonly IUploadService _uploadService;
         private readonly IAssetService _assetService;
+        private readonly IAiService _aiService;
 
         private const long UploadMaxSixe = 3_000_000_000;
 
-        public MediaController(IUploadService uploadService, IAssetService assetService)
+        public MediaController(IUploadService uploadService, IAssetService assetService, IAiService aiService)
         {
             _uploadService = uploadService;
             _assetService = assetService;
+            _aiService = aiService;
         }
 
         [HttpGet("media-assets")]
@@ -56,14 +58,14 @@ namespace Management.Dashboard.Api.Controllers
 
             var storagePath = "";
             long size = 0;
-            string fileName = "";
+            var fileName = "";
 
             if (model.IsAi)
             {
-                
-            }else
+                storagePath = await _aiService.GenerateAsync(model.Description, tenantId);
+            }
+            else
             {
-
                 if (model?.File == null)
                 {
                     return BadRequest("file is null");
@@ -97,12 +99,14 @@ namespace Management.Dashboard.Api.Controllers
                         Description = model.Description,
                         Type = AssetType.Image
                     });
+
+                // Process uploaded files
+                // Don't rely on or trust the FileName property without validation.
+
+                return Ok(new { filename = fileName, size });
             }
 
-            // Process uploaded files
-            // Don't rely on or trust the FileName property without validation.
-
-            return Ok(new { filename = fileName, size });
+            return BadRequest();
         }
 
         [HttpDelete("media-assets/{id}")]

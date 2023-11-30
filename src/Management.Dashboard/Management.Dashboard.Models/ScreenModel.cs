@@ -18,6 +18,8 @@ namespace Management.Dashboard.Models
         public LayoutModel? Layout { get; set; }
 
         public string? ExternalMediaSource { get; set; }
+
+        public string? TextEditorData { get; set; } = string.Empty;
     }
 
     [BsonIgnoreExtraElements]

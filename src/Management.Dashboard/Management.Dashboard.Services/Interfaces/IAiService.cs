@@ -2,6 +2,6 @@
 {
     public interface IAiService
     {
-        Task<string> GenerateAsync(string inputText);
+        Task<string?> GenerateAsync(string inputText, string tenantId);
     }
 }

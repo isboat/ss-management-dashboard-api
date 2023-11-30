@@ -8,7 +8,7 @@
         public const string MenuTopAndMediaBottom = "MenuTopAndMediaBottom";
         public const string MediaTopAndMenuBottom = "MediaTopAndMenuBottom";
         public const string Text = "Text";
-        public const string DateTime = "DateTime";
+        public const string DateTime = "CurrentDateTime";
     }
 
 
@@ -21,7 +21,7 @@
     }
     public class DateTimeSubTypeKeys
     {
-        public const string British = "British";
-        public const string American = "American";
+        public const string British = "dd/mm/yyyy tt:mm:ss";
+        public const string American = "mm/dd/yyyy tt:mm:ss";
     }
 }
