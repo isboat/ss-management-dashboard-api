@@ -51,16 +51,8 @@ namespace Management.Dashboard.Services
 
                 new TemplateViewModel
                 {
-                    Key = TemplateKeys.MediaTopAndMenuBottom,
-                    Label = "Media top and menu bottom",
-                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MediaTopAndMenuBottom),
-                    SubTypes = GetMenuSubTypes()
-                },
-
-                new TemplateViewModel
-                {
                     Key = TemplateKeys.Text,
-                    Label = "Show Text",
+                    Label = "Show Text/Information",
                     RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.Text)
                 },
 
@@ -70,6 +62,20 @@ namespace Management.Dashboard.Services
                     Label = "Show Date and time",
                     RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.DateTime),
                     SubTypes = GetDateSubTypes()
+                },
+
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.DateTime,
+                    Label = "Show Media Playlist",
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MediaPlaylist)
+                },
+
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.Weather,
+                    Label = "Show current weather and forecast",
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.Weather)
                 }
             };
 
@@ -113,6 +119,16 @@ namespace Management.Dashboard.Services
                 {
                     Key = DateTimeSubTypeKeys.American,
                     Label = "mm/dd/yyyy tt:mm:ss"
+                },
+                new SubTypeViewModel
+                {
+                    Key = DateTimeSubTypeKeys.TimeFirstAmerican,
+                    Label = "tt:mm:ss january 1, yyyy"
+                },
+                new SubTypeViewModel
+                {
+                    Key = DateTimeSubTypeKeys.TimeFirstBritish,
+                    Label = "tt:mm:ss 1 january, yyyy"
                 }
             };
 

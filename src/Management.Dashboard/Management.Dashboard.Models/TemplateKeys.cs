@@ -9,8 +9,9 @@
         public const string MediaTopAndMenuBottom = "MediaTopAndMenuBottom";
         public const string Text = "Text";
         public const string DateTime = "CurrentDateTime";
+        public const string Weather = "Weather";
+        public const string MediaPlaylist = "MediaPlaylist";
     }
-
 
 
     public class MenuSubTypeKeys
@@ -19,9 +20,12 @@
         public const string Premium = "Premium";
         public const string Deluxe = "Deluxe";
     }
+
     public class DateTimeSubTypeKeys
     {
         public const string British = "dd/mm/yyyy tt:mm:ss";
         public const string American = "mm/dd/yyyy tt:mm:ss";
+        public const string TimeFirstAmerican = "tt:mm:ss january 1, yyyy";
+        public const string TimeFirstBritish = "tt:mm:ss 1 january, yyyy";
     }
 }
