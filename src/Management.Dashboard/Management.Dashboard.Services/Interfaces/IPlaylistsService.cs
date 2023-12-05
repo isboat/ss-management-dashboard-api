@@ -8,6 +8,8 @@ namespace Management.Dashboard.Services.Interfaces
 
         Task<PlaylistModel?> GetAsync(string tenantId, string id);
 
+        Task<PlaylistWithItemModel?> GetWithMediaAsync(string tenantId, string id);
+
         public Task CreateAsync(PlaylistModel newModel);
 
         public Task UpdateAsync(string id, PlaylistModel updatedModel);

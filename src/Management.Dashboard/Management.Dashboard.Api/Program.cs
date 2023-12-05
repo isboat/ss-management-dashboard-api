@@ -76,6 +76,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IDeviceAuthRepository<DeviceAuthModel>, DeviceAuthRepository>();
             builder.Services.AddSingleton<IRepository<AssetItemModel>, AssetRepository>();
             builder.Services.AddSingleton<IRepository<DeviceModel>, DeviceRepository>();
+            builder.Services.AddSingleton<IRepository<PlaylistModel>, PlaylistsRepository>();
             builder.Services.AddSingleton<ITenantRepository, TenantRepository>();
             builder.Services.AddSingleton<IPublishRepository, PublishRepository>();
 
@@ -92,6 +93,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IPreviewService, PreviewService>();
             builder.Services.AddSingleton<IPublishService, PublishService>();
             builder.Services.AddSingleton<IAiService, AiService>();
+            builder.Services.AddSingleton<IPlaylistsService, PlaylistsService>();
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 
             builder.Services.AddSingleton<IDateTimeProvider, SystemDatetimeProvider>();

@@ -41,7 +41,7 @@ namespace Management.Dashboard.Api.Controllers
         }
 
         [HttpGet("playlists/{id}")]
-        [ProducesResponseType(typeof(DeviceModel), 200)]
+        [ProducesResponseType(typeof(PlaylistWithItemModel), 200)]
         public async Task<IActionResult> Get(string id)
         {
             var tenantId = GetRequestTenantId();
@@ -51,8 +51,25 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            var data = await _playlistsService.GetAsync(tenantId, id);
+            var data = await _playlistsService.GetWithMediaAsync(tenantId, id);
             return data != null ? new JsonResult(data) : NotFound();
+        }
+
+
+        [HttpPost("playlists")]
+        public async Task<ActionResult> Post([FromBody] PlaylistModel model)
+        {
+            var tenantId = GetRequestTenantId();
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            model.TenantId = tenantId;
+
+            await _playlistsService.CreateAsync(model);
+
+            return NoContent();
         }
 
 
