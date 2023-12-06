@@ -11,6 +11,8 @@ namespace Management.Dashboard.Models
 
         public string? Name { get; set; }
 
+        public TimeSpan? ItemDuration { get; set; }
+
         public DateTime? Created { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
@@ -22,12 +24,13 @@ namespace Management.Dashboard.Models
     {
         public PlaylistWithItemModel(PlaylistModel model)
         {
-            this.Id = model.Id;
-            this.TenantId = model.TenantId;
-            this.Name = model.Name;
-            this.Created = model.Created;
-            this.ModifiedDate = model.ModifiedDate;
-            this.AssetIds = model.AssetIds;
+            this.Id = model?.Id;
+            this.TenantId = model?.TenantId;
+            this.Name = model?.Name;
+            this.Created = model?.Created;
+            this.ModifiedDate = model?.ModifiedDate;
+            this.AssetIds = model?.AssetIds;
+            this.ItemDuration = model?.ItemDuration;
             this.AssetItems = new List<AssetItemModel>();
         }
         public IList<AssetItemModel>? AssetItems { get; set; }

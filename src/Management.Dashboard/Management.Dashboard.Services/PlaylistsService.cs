@@ -32,9 +32,11 @@ namespace Management.Dashboard.Services
         public async Task<PlaylistWithItemModel?> GetWithMediaAsync(string tenantId, string id)
         {
             var playlist = await _repository.GetAsync(tenantId, id);
+            if (playlist == null) return null;
+
+            var withItem = new PlaylistWithItemModel(playlist);
             if (playlist?.AssetIds != null && playlist.AssetIds.Any())
             {
-                var withItem = new PlaylistWithItemModel(playlist);
 
                 foreach (var assetId in playlist.AssetIds)
                 {
@@ -48,7 +50,7 @@ namespace Management.Dashboard.Services
                 return withItem;
             }
 
-            return null;
+            return withItem;
         }
 
         public async Task RemoveAsync(string tenantId, string id) =>
