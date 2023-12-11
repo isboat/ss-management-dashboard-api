@@ -18,14 +18,20 @@ namespace Management.Dashboard.Api.Controllers
         private readonly IUploadService _uploadService;
         private readonly IAssetService _assetService;
         private readonly IAiService _aiService;
+        private readonly IPlaylistsService _playlistsService;
 
         private const long UploadMaxSixe = 3_000_000_000;
 
-        public MediaController(IUploadService uploadService, IAssetService assetService, IAiService aiService)
+        public MediaController(
+            IUploadService uploadService, 
+            IAssetService assetService, 
+            IAiService aiService, 
+            IPlaylistsService playlistsService)
         {
             _uploadService = uploadService;
             _assetService = assetService;
             _aiService = aiService;
+            _playlistsService = playlistsService;
         }
 
         [HttpGet("media-assets")]
@@ -107,6 +113,22 @@ namespace Management.Dashboard.Api.Controllers
             }
 
             return BadRequest();
+        }
+
+
+        [HttpPatch("media-assets/{id}/playlist/{playlistId}")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult> AddMediaToPlaylist(string id, string playlistId)
+        {
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(playlistId))
+            {
+                return BadRequest();
+            }
+
+            await _playlistsService.AddMediaToPlaylist(tenantId, playlistId, id);
+            return NoContent();
         }
 
         [HttpDelete("media-assets/{id}")]

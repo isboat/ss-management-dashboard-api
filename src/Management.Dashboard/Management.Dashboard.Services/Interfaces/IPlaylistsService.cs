@@ -15,5 +15,7 @@ namespace Management.Dashboard.Services.Interfaces
         public Task UpdateAsync(string id, PlaylistModel updatedModel);
 
         public Task RemoveAsync(string tenantId, string id);
+
+        public Task AddMediaToPlaylist(string tenantId, string id, string mediaId);
     }
 }
