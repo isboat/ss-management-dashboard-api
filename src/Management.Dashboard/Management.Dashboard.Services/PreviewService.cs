@@ -9,15 +9,18 @@ namespace Management.Dashboard.Services
         private readonly IRepository<ScreenModel> _repository;
         private readonly IRepository<AssetItemModel> _mediaRepository;
         private readonly IRepository<MenuModel> _menuRepository;
+        private readonly IPlaylistsService _playlistsService;
 
         public PreviewService(
-            IRepository<ScreenModel> repository, 
-            IRepository<AssetItemModel> mediaRepository, 
-            IRepository<MenuModel> menuRepository)
+            IRepository<ScreenModel> repository,
+            IRepository<AssetItemModel> mediaRepository,
+            IRepository<MenuModel> menuRepository,
+            IPlaylistsService playlistsService)
         {
             _repository = repository;
             _mediaRepository = mediaRepository;
             _menuRepository = menuRepository;
+            _playlistsService = playlistsService;
         }
 
         public async Task<DetailedScreenModel?> GetDataAsync(string tenantId, string id)
@@ -30,6 +33,11 @@ namespace Management.Dashboard.Services
             if (!string.IsNullOrEmpty(screenDetails.MenuEntityId))
             {
                 screenDetails.Menu = await GetMenuDetails(tenantId, screenDetails.MenuEntityId);
+            }
+
+            if(!string.IsNullOrEmpty(screenDetails.PlaylistId))
+            {
+                screenDetails.PlaylistData = await _playlistsService.GetWithMediaAsync(tenantId, screenDetails.PlaylistId);
             }
 
             if (!string.IsNullOrEmpty(screenDetails.MediaAssetEntityId))

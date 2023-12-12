@@ -20,6 +20,8 @@ namespace Management.Dashboard.Models
         public string? ExternalMediaSource { get; set; }
 
         public string? TextEditorData { get; set; } = string.Empty;
+
+        public string? PlaylistId { get; set; }
     }
 
     [BsonIgnoreExtraElements]

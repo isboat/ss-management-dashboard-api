@@ -27,6 +27,7 @@ namespace Management.Dashboard.Models
         public IEnumerable<MenuItem>? MenuItems { get; set; }
     }
 
+    [BsonIgnoreExtraElements]
     public class MenuItem: IModelItem
     {
         public string? Id { get; set; }
@@ -37,8 +38,8 @@ namespace Management.Dashboard.Models
 
         public string? IconUrl { get; set; }
 
-        public string? Title { get; set; }
-
         public string? Price { get; set; }
+
+        public string? DiscountPrice { get; set; }
     }
 }

@@ -72,6 +72,18 @@ namespace Management.Dashboard.Services
             await this.UpdateAsync(id, playlist);
         }
 
+
+        public async Task RemoveMediaFromPlaylist(string tenantId, string id, string mediaId)
+        {
+            var playlist = await _repository.GetAsync(tenantId, id);
+            if (playlist == null) return;
+
+            playlist.AssetIds ??= new List<string>();
+            playlist.AssetIds.Remove(mediaId);
+
+            await this.UpdateAsync(id, playlist);
+        }
+
         private static void AddId(IModelItem newModel)
         {
             newModel.Id = Guid.NewGuid().ToString("N");

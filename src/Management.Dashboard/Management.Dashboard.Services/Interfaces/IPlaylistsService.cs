@@ -17,5 +17,7 @@ namespace Management.Dashboard.Services.Interfaces
         public Task RemoveAsync(string tenantId, string id);
 
         public Task AddMediaToPlaylist(string tenantId, string id, string mediaId);
+
+        public Task RemoveMediaFromPlaylist(string tenantId, string id, string mediaId);
     }
 }

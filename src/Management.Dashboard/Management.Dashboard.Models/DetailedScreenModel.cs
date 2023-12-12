@@ -9,6 +9,7 @@ namespace Management.Dashboard.Models
         public AssetItemModel? MediaAsset { get; set; }
 
         public string? Checksum { get; set; }
+        public PlaylistWithItemModel? PlaylistData { get; set; }
 
         public static DetailedScreenModel ToDetails(ScreenModel screen)
         {
@@ -21,7 +22,8 @@ namespace Management.Dashboard.Models
                 MediaAssetEntityId = screen.MediaAssetEntityId,
                 ExternalMediaSource = screen.ExternalMediaSource,
                 TextEditorData = screen.TextEditorData,
-                Layout = screen.Layout
+                Layout = screen.Layout,
+                PlaylistId = screen.PlaylistId,
             };
 
             return details;

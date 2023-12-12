@@ -131,6 +131,22 @@ namespace Management.Dashboard.Api.Controllers
             return NoContent();
         }
 
+
+        [HttpDelete("media-assets/{id}/playlist/{playlistId}")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult> RemoveMediaFromPlaylist(string id, string playlistId)
+        {
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(playlistId))
+            {
+                return BadRequest();
+            }
+
+            await _playlistsService.RemoveMediaFromPlaylist(tenantId, playlistId, id);
+            return NoContent();
+        }
+
         [HttpDelete("media-assets/{id}")]
         public async Task<ActionResult> Delete(string id)
         {

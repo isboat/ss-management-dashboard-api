@@ -66,7 +66,7 @@ namespace Management.Dashboard.Services
 
                 new TemplateViewModel
                 {
-                    Key = TemplateKeys.DateTime,
+                    Key = TemplateKeys.MediaPlaylist,
                     Label = "Show Media Playlist",
                     RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.MediaPlaylist)
                 },
