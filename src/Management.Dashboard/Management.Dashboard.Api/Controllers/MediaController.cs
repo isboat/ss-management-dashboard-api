@@ -62,6 +62,10 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
+            var allowedVideoFileExt = "video/mp4";
+            var allowedImageFileExt = "image/jpeg,image/png";
+            var isImageFile = false;
+
             var storagePath = "";
             long size = 0;
             var fileName = "";
@@ -76,20 +80,19 @@ namespace Management.Dashboard.Api.Controllers
                 {
                     return BadRequest("file is null");
                 }
+                isImageFile = allowedImageFileExt.Contains(model.File.ContentType);
 
-                var allowedFileExt = "image/jpeg,image/png,mp4";            
-                if (!allowedFileExt.Contains(model.File.ContentType))
+                if (!isImageFile && !allowedVideoFileExt.Contains(model.File.ContentType))
                 {
                     return BadRequest($"{model.File.ContentType} Not allowed");
                 }
 
                 size = model.File.Length;
-
                 if (model.File.Length > 0)
                 {
+                    fileName = model.File.FileName.ToLowerInvariant();
                     await using var stream = model.File.OpenReadStream();
-                    storagePath = await _uploadService.UploadAsync(tenantId, model.File.FileName.ToLowerInvariant(), stream);
-                    fileName = model.File.FileName;
+                    storagePath = await _uploadService.UploadAsync(tenantId, fileName, stream);
                 }
             }
 
@@ -103,7 +106,8 @@ namespace Management.Dashboard.Api.Controllers
                         TenantId = tenantId,
                         Id = Guid.NewGuid().ToString("D"),
                         Description = model.Description,
-                        Type = AssetType.Image
+                        Type = isImageFile ? AssetType.Image : AssetType.Video,
+                        FileName = fileName
                     });
 
                 // Process uploaded files
@@ -113,6 +117,35 @@ namespace Management.Dashboard.Api.Controllers
             }
 
             return BadRequest();
+        }
+
+
+        [HttpDelete("media-assets/{id}")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id))
+            {
+                return BadRequest();
+            }
+
+            var dBAsset = await _assetService.GetAsync(tenantId, id);
+            if (dBAsset == null)
+            {
+                return NotFound();
+            }
+
+            var deleteResult = await _uploadService.RemoveAsync(tenantId, dBAsset.FileName);
+            if (!deleteResult) return BadRequest("unable_to_delete");
+
+            await _assetService.RemoveAsync(tenantId, dBAsset.Id);
+            return NoContent();
         }
 
 
@@ -144,25 +177,6 @@ namespace Management.Dashboard.Api.Controllers
             }
 
             await _playlistsService.RemoveMediaFromPlaylist(tenantId, playlistId, id);
-            return NoContent();
-        }
-
-        [HttpDelete("media-assets/{id}")]
-        public async Task<ActionResult> Delete(string id)
-        {
-            var tenantId = GetRequestTenantId();
-
-            if (string.IsNullOrEmpty(tenantId))
-            {
-                return BadRequest();
-            }
-
-            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id))
-            {
-                return BadRequest();
-            }
-
-            await _uploadService.RemoveAsync(tenantId, id.ToLowerInvariant());
             return NoContent();
         }
 

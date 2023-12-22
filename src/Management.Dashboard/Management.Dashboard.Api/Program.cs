@@ -86,7 +86,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IAssetService, AssetService>();
             builder.Services.AddSingleton<IMenuService, MenuService>();
             builder.Services.AddSingleton<IUserService, UserService>();
-            builder.Services.AddSingleton<IUploadService, LocalUploadService>();
+            builder.Services.AddSingleton<IUploadService, S3UploadService>();
             builder.Services.AddSingleton<ITemplatesService, TemplatesService>();
             builder.Services.AddSingleton<IJwtService, JwtService>();
             builder.Services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
