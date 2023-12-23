@@ -71,7 +71,9 @@ namespace Management.Dashboard.Repositories
             return result.IsAcknowledged ? DeviceAuthApprovalStatus.Success : DeviceAuthApprovalStatus.Failed;
         }
 
-        public async Task RemoveAsync(string tenantId, string id) =>
-            await _collection.DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
+        public async Task RemoveAsync(string tenantId, string id)
+        {
+            var result = await _collection.DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
+        }
     }
 }
