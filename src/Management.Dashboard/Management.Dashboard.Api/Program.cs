@@ -34,6 +34,8 @@ namespace Management.Dashboard.Api
 
             RegisterJwtAuth(builder);
 
+            //builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -62,7 +64,8 @@ namespace Management.Dashboard.Api
                                   policy =>
                                   {
                                       policy.WithOrigins("http://localhost:4200",
-                                                          "http://localhost:4401").AllowAnyHeader().AllowAnyMethod();
+                                                          "http://localhost:4401",
+                                                          "https://isboat-screenservice-dashboard.s3.eu-west-2.amazonaws.com").AllowAnyHeader().AllowAnyMethod();
                                   });
             });
         }
@@ -92,7 +95,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddSingleton<IPreviewService, PreviewService>();
             builder.Services.AddSingleton<IPublishService, PublishService>();
-            builder.Services.AddSingleton<IAiService, AiService>();
+            builder.Services.AddSingleton<IAiService, StabilityAiService>();
             builder.Services.AddSingleton<IPlaylistsService, PlaylistsService>();
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 

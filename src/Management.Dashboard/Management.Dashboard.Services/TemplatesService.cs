@@ -113,22 +113,22 @@ namespace Management.Dashboard.Services
                 new SubTypeViewModel
                 {
                     Key = DateTimeSubTypeKeys.British,
-                    Label = "dd/mm/yyyy tt:mm:ss"
+                    Label = "dd/MM/yyyy HH:mm:ss"
                 },
                 new SubTypeViewModel
                 {
                     Key = DateTimeSubTypeKeys.American,
-                    Label = "mm/dd/yyyy tt:mm:ss"
+                    Label = "MM/dd/yyyy HH:mm:ss"
                 },
                 new SubTypeViewModel
                 {
                     Key = DateTimeSubTypeKeys.TimeFirstAmerican,
-                    Label = "tt:mm:ss january 1, yyyy"
+                    Label = "12 o'clock PM, Pacific Daylight Time"
                 },
                 new SubTypeViewModel
                 {
-                    Key = DateTimeSubTypeKeys.TimeFirstBritish,
-                    Label = "tt:mm:ss 1 january, yyyy"
+                    Key = DateTimeSubTypeKeys.DateFirstBritish,
+                    Label = "Wed, 4 Jul 2001 12:08:56"
                 }
             };
 

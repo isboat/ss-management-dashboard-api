@@ -72,7 +72,14 @@ namespace Management.Dashboard.Api.Controllers
 
             if (model.IsAi)
             {
-                storagePath = await _aiService.GenerateAsync(model.Description, tenantId);
+                var aiImagePath = await _aiService.GenerateAsync(model.Description, tenantId);
+                
+                if (aiImagePath == null) return BadRequest("ai_image_path_null");
+
+                fileName = $"{model.Title.Replace(" ", "_")}.png";
+                var file = System.IO.File.OpenRead(aiImagePath);
+                storagePath = await _uploadService.UploadAsync(tenantId, fileName, file);
+                isImageFile = true;
             }
             else
             {

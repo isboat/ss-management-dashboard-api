@@ -23,9 +23,9 @@
 
     public class DateTimeSubTypeKeys
     {
-        public const string British = "dd/mm/yyyy tt:mm:ss";
-        public const string American = "mm/dd/yyyy tt:mm:ss";
-        public const string TimeFirstAmerican = "tt:mm:ss january 1, yyyy";
-        public const string TimeFirstBritish = "tt:mm:ss 1 january, yyyy";
+        public const string British = "dd/MM/yyyy HH:mm:ss";
+        public const string American = "MM/dd/yyyy HH:mm:ss";
+        public const string TimeFirstAmerican = "hh 'o''clock' a, zzzz";
+        public const string DateFirstBritish = "EEE, d MMM yyyy HH:mm:ss";
     }
 }
