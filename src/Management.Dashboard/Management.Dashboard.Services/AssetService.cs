@@ -35,7 +35,10 @@ namespace Management.Dashboard.Services
 
         private static void AddId(IModelItem newModel)
         {
-            newModel.Id = Guid.NewGuid().ToString("N");
+            if (string.IsNullOrEmpty(newModel.Id))
+            {
+                newModel.Id = Guid.NewGuid().ToString("N");
+            }
         }
     }
 }

@@ -49,6 +49,21 @@ namespace Management.Dashboard.Api.Controllers
             return data != null ? new JsonResult(data) : NotFound();
         }
 
+        [HttpGet("media-assets/{id}")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> GetById(string id)
+        {
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id))
+            {
+                return BadRequest();
+            }
+
+            var data = await _assetService.GetAsync(tenantId, id);
+            return data != null ? new JsonResult(data) : NotFound();
+        }
+
         [HttpPost("media-assets")]
         [RequestSizeLimit(UploadMaxSixe)]
         [RequestFormLimits(MultipartBodyLengthLimit = UploadMaxSixe)]
@@ -105,13 +120,14 @@ namespace Management.Dashboard.Api.Controllers
 
             if (!string.IsNullOrEmpty(storagePath))
             {
+                var assetId = Guid.NewGuid().ToString("N");
                 await _assetService.CreateAsync(
                     new AssetItemModel
                     {
                         AssetUrl = storagePath,
                         Name = model.Title,
                         TenantId = tenantId,
-                        Id = Guid.NewGuid().ToString("D"),
+                        Id = assetId,
                         Description = model.Description,
                         Type = isImageFile ? AssetType.Image : AssetType.Video,
                         FileName = fileName
@@ -120,7 +136,7 @@ namespace Management.Dashboard.Api.Controllers
                 // Process uploaded files
                 // Don't rely on or trust the FileName property without validation.
 
-                return Ok(new { filename = fileName, size });
+                return Ok(new { filename = fileName, size, id = assetId });
             }
 
             return BadRequest();
