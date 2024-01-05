@@ -172,6 +172,27 @@ namespace Management.Dashboard.Api.Controllers
         }
 
 
+        [HttpPatch("media-assets/{id}/name/{name}")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult> PatchName(string id, string name)
+        {
+            var tenantId = GetRequestTenantId();
+
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(id) || string.IsNullOrEmpty(name))
+            {
+                return BadRequest();
+            }
+
+            var asset = await _assetService.GetAsync(tenantId, id);
+            if (asset == null) return BadRequest();
+
+            asset.Name = name;
+            await _assetService.UpdateAsync(id, asset);
+
+            return NoContent();
+        }
+
+
         [HttpPatch("media-assets/{id}/playlist/{playlistId}")]
         [ProducesResponseType(200)]
         public async Task<ActionResult> AddMediaToPlaylist(string id, string playlistId)
