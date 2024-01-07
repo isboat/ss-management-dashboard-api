@@ -73,9 +73,18 @@ namespace Management.Dashboard.Services
 
                 new TemplateViewModel
                 {
-                    Key = TemplateKeys.Weather,
-                    Label = "Show current weather and forecast",
-                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.Weather)
+                    Key = TemplateKeys.VideoStreaming,
+                    Label = "Show Video Streaming",
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.VideoStreaming),
+                    SubTypes = GetVideoStreamingSubTypes()
+                },
+
+                new TemplateViewModel
+                {
+                    Key = TemplateKeys.FreeTVChannels,
+                    Label = "Show Free TV Channels",
+                    RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.FreeTVChannels),
+                    SubTypes = GetFreeTVChannelsSubTypes()
                 }
             };
 
@@ -129,6 +138,39 @@ namespace Management.Dashboard.Services
                 {
                     Key = DateTimeSubTypeKeys.DateFirstBritish,
                     Label = "Wed, 4 Jul 2001 12:08:56"
+                }
+            };
+
+            return list;
+        }
+
+        private static IEnumerable<SubTypeViewModel> GetVideoStreamingSubTypes()
+        {
+            var list = new List<SubTypeViewModel>
+            {
+                new SubTypeViewModel
+                {
+                    Key = VideoStreamingSubTypeKeys.Camera,
+                    Label = "Camera"
+                }
+            };
+
+            return list;
+        }
+
+        private static IEnumerable<SubTypeViewModel> GetFreeTVChannelsSubTypes()
+        {
+            var list = new List<SubTypeViewModel>
+            {
+                new SubTypeViewModel
+                {
+                    Key = FreeTVChannelsSubTypeKeys.Bbc,
+                    Label = "BBC"
+                },
+                new SubTypeViewModel
+                {
+                    Key = FreeTVChannelsSubTypeKeys.Pluto,
+                    Label = "Pluto"
                 }
             };
 

@@ -26,6 +26,8 @@ namespace Management.Dashboard.Repositories
                     return TextProperties();
                 case TemplateKeys.DateTime:
                     return TextProperties();
+                case TemplateKeys.VideoStreaming:
+                    return VideoStreamingProperties();
                 default:
                     break;
             }
@@ -47,9 +49,16 @@ namespace Management.Dashboard.Repositories
         {
             return new List<TemplatePropertyModel>
             {
-                new TemplatePropertyModel{ Key = "textColor", Label = "Text Color" },
-                new TemplatePropertyModel { Key = "textFont", Label = "Text Font" },
-                new TemplatePropertyModel { Key = "text-align", Label = "Text Align" }
+                new() { Key = "textColor", Label = "Text Color" },
+                new() { Key = "textFont", Label = "Text Font" },
+                new() { Key = "text-align", Label = "Text Align" }
+            };
+        }
+
+        private static IEnumerable<TemplatePropertyModel> VideoStreamingProperties()
+        {
+            return new List<TemplatePropertyModel>
+            {
             };
         }
     }

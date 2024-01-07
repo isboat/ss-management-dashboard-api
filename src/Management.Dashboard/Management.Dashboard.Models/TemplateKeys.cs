@@ -11,6 +11,8 @@
         public const string DateTime = "CurrentDateTime";
         public const string Weather = "Weather";
         public const string MediaPlaylist = "MediaPlaylist";
+        public const string VideoStreaming = "VideoStreaming";
+        public const string FreeTVChannels = "FreeTVChannels";
     }
 
 
@@ -27,5 +29,16 @@
         public const string American = "MM/dd/yyyy HH:mm:ss";
         public const string TimeFirstAmerican = "hh 'o''clock' a, zzzz";
         public const string DateFirstBritish = "EEE, d MMM yyyy HH:mm:ss";
+    }
+
+    public class VideoStreamingSubTypeKeys
+    {
+        public const string Camera = "Camera";
+    }
+
+    public class FreeTVChannelsSubTypeKeys
+    {
+        public const string Bbc = "BBC";
+        public const string Pluto = "Pluto";
     }
 }
