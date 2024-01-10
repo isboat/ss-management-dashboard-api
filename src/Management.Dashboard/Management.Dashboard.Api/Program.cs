@@ -12,6 +12,7 @@ using System.Text;
 
 namespace Management.Dashboard.Api
 {
+    // https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?tabs=azure-cli
     public class Program
     {
         public static void Main(string[] args)
@@ -33,8 +34,6 @@ namespace Management.Dashboard.Api
             AddCustomCorsPolicy(builder, TenantAuthorization.RequiredCorsPolicy);
 
             RegisterJwtAuth(builder);
-
-            //builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
 
             var app = builder.Build();
 
@@ -65,6 +64,7 @@ namespace Management.Dashboard.Api
                                   {
                                       policy.WithOrigins("http://localhost:4200",
                                                           "http://localhost:4401",
+                                                          "https://wonderful-flower-0b610c010.4.azurestaticapps.net",
                                                           "https://isboat-screenservice-dashboard.s3.eu-west-2.amazonaws.com").AllowAnyHeader().AllowAnyMethod();
                                   });
             });

@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Management.Dashboard.Common\Management.Dashboard.Common.csproj" />
-    <ProjectReference Include="..\..\Management.Dashboard.Exceptions\Management.Dashboard.Exceptions.csproj" />
+    <ProjectReference Include="..\Management.Dashboard.Common\Management.Dashboard.Common.csproj" />
+    <ProjectReference Include="..\Management.Dashboard.Exceptions\Management.Dashboard.Exceptions.csproj" />
     <ProjectReference Include="..\Management.Dashboard.Models\Management.Dashboard.Models.csproj" />
     <ProjectReference Include="..\Management.Dashboard.Repositories\Management.Dashboard.Repositories.csproj" />
   </ItemGroup>
