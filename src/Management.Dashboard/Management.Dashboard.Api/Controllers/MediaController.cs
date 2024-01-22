@@ -79,16 +79,15 @@ namespace Management.Dashboard.Api.Controllers
 
             var allowedVideoFileExt = "video/mp4";
             var allowedImageFileExt = "image/jpeg,image/png";
-            var isImageFile = false;
-
             var storagePath = "";
             long size = 0;
             var fileName = "";
 
+            bool isImageFile;
             if (model.IsAi)
             {
                 var aiImagePath = await _aiService.GenerateAsync(model.Description, tenantId);
-                
+
                 if (aiImagePath == null) return BadRequest("ai_image_path_null");
 
                 fileName = $"{model.Title.Replace(" ", "_")}.png";

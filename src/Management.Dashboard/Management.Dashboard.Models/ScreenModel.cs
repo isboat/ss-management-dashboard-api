@@ -15,6 +15,8 @@ namespace Management.Dashboard.Models
 
         public string? MediaAssetEntityId { get; set; }
 
+        public string? TextAssetEntityId { get; set; }
+
         public LayoutModel? Layout { get; set; }
 
         public string? ExternalMediaSource { get; set; }

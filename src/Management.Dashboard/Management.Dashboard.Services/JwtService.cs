@@ -1,4 +1,6 @@
-﻿using Management.Dashboard.Services.Interfaces;
+﻿using Management.Dashboard.Models;
+using Management.Dashboard.Services.Interfaces;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,13 +15,13 @@ namespace Management.Dashboard.Services
         private readonly string _jwtAudience;
         private readonly string _jwtSigningKey;
 
-        public JwtService()
+        public JwtService(IOptions<JwtSettings> settings)
         {
             _jwtSecurityTokenHandler = new();
 
-            _jwtIssuer = "http://mysite.com";
-            _jwtAudience = "http://myaudience.com";
-            _jwtSigningKey = "asdv234234^&%&^%&^hjsdfb2%%%";
+            _jwtIssuer = settings.Value.Issuer;
+            _jwtAudience = settings.Value.Audience;
+            _jwtSigningKey = settings.Value.SigningKey;
         }
 
         public string GenerateToken(IDictionary<string, string> tokenData, DateTime? expiresOn)

@@ -35,6 +35,7 @@ namespace Management.Dashboard.Services
             {
                 { "tenantid", dbUser.TenantId! },
                 { "email", dbUser.Email! },
+                { "initials", GetInitials(dbUser)! },
                 { "scope", TenantAuthorization.RequiredScope },
             };
             if (dbUser.Role.HasValue)
@@ -47,6 +48,21 @@ namespace Management.Dashboard.Services
             };
 
             return tokenResponse;
+        }
+        private static string GetInitials(UserModel dbUser)
+        {
+            if(string.IsNullOrEmpty(dbUser?.Name)) return string.Empty;
+
+            var splits = dbUser.Name.Split(" ");
+            if (splits.Length == 0) return string.Empty;
+
+            var ss = "";
+            foreach (var item in splits)
+            {
+                ss += item[0];
+            }
+
+            return ss.ToUpperInvariant();
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Management.Dashboard.Services
                 new TemplateViewModel
                 {
                     Key = TemplateKeys.Text,
-                    Label = "Show Text/Information",
+                    Label = "Show AD Text/Information",
                     RequiredProperties = _templatesRepository.GetTemplateProperties(TemplateKeys.Text)
                 },
 

@@ -1,4 +1,5 @@
 
+using Management.Dashboard.Api.filters;
 using Management.Dashboard.Common;
 using Management.Dashboard.Common.Constants;
 using Management.Dashboard.Models;
@@ -7,8 +8,12 @@ using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services;
 using Management.Dashboard.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Management.Dashboard.Api
 {
@@ -22,18 +27,35 @@ namespace Management.Dashboard.Api
             builder.Services.Configure<MongoSettings>(
                 builder.Configuration.GetSection("MongoSettings"));
 
+            builder.Services.Configure<JwtSettings>(
+                builder.Configuration.GetSection("JwtSettings"));
+
             // Add services to the container.
             RegisterServices(builder);
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            //builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dashboard Management", Version = "v1" });
+                c.AddSecurityDefinition("token", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    In = ParameterLocation.Header,
+                    Name = HeaderNames.Authorization,
+                    Scheme = "Bearer"
+                });
+                // dont add global security requirement
+                // c.AddSecurityRequirement(/*...*/);
+                c.OperationFilter<SecureEndpointAuthRequirementFilter>();
+            });
 
 
             AddCustomCorsPolicy(builder, TenantAuthorization.RequiredCorsPolicy);
 
-            RegisterJwtAuth(builder);
+            RegisterJwtAuth(builder, builder.Configuration);
 
             var app = builder.Build();
 
@@ -43,6 +65,8 @@ namespace Management.Dashboard.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            //app.UseExceptionHandler(ExceptionHandler);
 
             app.UseHttpsRedirection();
 
@@ -55,6 +79,32 @@ namespace Management.Dashboard.Api
             app.Run();
         }
 
+        private static void ExceptionHandler(IApplicationBuilder exceptionHandlerApp)
+        {
+            exceptionHandlerApp.Run(async context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+                // using static System.Net.Mime.MediaTypeNames;
+                context.Response.ContentType = Text.Plain;
+
+                await context.Response.WriteAsync("An exception was thrown.");
+
+                var exceptionHandlerPathFeature =
+                    context.Features.Get<IExceptionHandlerPathFeature>();
+
+                if (exceptionHandlerPathFeature?.Error is FileNotFoundException)
+                {
+                    await context.Response.WriteAsync(" The file was not found.");
+                }
+
+                if (exceptionHandlerPathFeature?.Path == "/")
+                {
+                    await context.Response.WriteAsync(" Page: Home.");
+                }
+            });
+        }
+
         private static void AddCustomCorsPolicy(WebApplicationBuilder builder, string allowSpecificOrigins)
         {
             builder.Services.AddCors(options =>
@@ -65,7 +115,7 @@ namespace Management.Dashboard.Api
                                       policy.WithOrigins("http://localhost:4200",
                                                           "http://localhost:4401",
                                                           "https://wonderful-flower-0b610c010.4.azurestaticapps.net",
-                                                          "https://isboat-screenservice-dashboard.s3.eu-west-2.amazonaws.com").AllowAnyHeader().AllowAnyMethod();
+                                                          "https://dashboard.onscreensync.com").AllowAnyHeader().AllowAnyMethod();
                                   });
             });
         }
@@ -78,6 +128,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IUserRepository<UserModel>, UserRepository>();
             builder.Services.AddSingleton<IDeviceAuthRepository<DeviceAuthModel>, DeviceAuthRepository>();
             builder.Services.AddSingleton<IRepository<AssetItemModel>, AssetRepository>();
+            builder.Services.AddSingleton<IRepository<TextAssetItemModel>, TextAssetRepository>();
             builder.Services.AddSingleton<IRepository<DeviceModel>, DeviceRepository>();
             builder.Services.AddSingleton<IRepository<PlaylistModel>, PlaylistsRepository>();
             builder.Services.AddSingleton<ITenantRepository, TenantRepository>();
@@ -87,6 +138,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IDevicesService, DevicesService>();
             builder.Services.AddSingleton<IDeviceAuthService, DeviceAuthService>();
             builder.Services.AddSingleton<IAssetService, AssetService>();
+            builder.Services.AddSingleton<ITextAssetService, TextAssetService>();
             builder.Services.AddSingleton<IMenuService, MenuService>();
             builder.Services.AddSingleton<IUserService, UserService>();
             builder.Services.AddSingleton<IUploadService, S3UploadService>();
@@ -102,11 +154,10 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IDateTimeProvider, SystemDatetimeProvider>();
         }
 
-        private static void RegisterJwtAuth(WebApplicationBuilder builder)
+        private static void RegisterJwtAuth(WebApplicationBuilder builder, ConfigurationManager configuration)
         {
-            var jwtIssuer = "http://mysite.com";
-            var jwtAudience = "http://myaudience.com";
-            var jwtSigningKey = "asdv234234^&%&^%&^hjsdfb2%%%";
+            var settings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            if (settings == null) return;
 
             var isAuthenticationDisabled = false;
 
@@ -134,9 +185,9 @@ namespace Management.Dashboard.Api
                                 // (a lower value is better; we recommend two minutes or less)
                                 ClockSkew = TimeSpan.FromSeconds(0),
 
-                                ValidIssuer = jwtIssuer,
-                                ValidAudience = jwtAudience,
-                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSigningKey))
+                                ValidIssuer = settings.Issuer,
+                                ValidAudience = settings.Audience,
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(settings.SigningKey))
                             };
                         });
             }
