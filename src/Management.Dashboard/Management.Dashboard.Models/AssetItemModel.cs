@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Management.Dashboard.Models
 {
     [BsonIgnoreExtraElements]
-    public class AssetItemModel : IModelItem
+    public class AssetItemModel : IModelItem, IPlaylistItem
     {
         public string? Id { get; set; }
 
@@ -23,6 +23,7 @@ namespace Management.Dashboard.Models
         public string? FileName { get; set; }
 
         public AssetType? Type { get; set; }
+        public PlaylistItemType PlaylistType => PlaylistItemType.Media;
     }
 
     public enum AssetType

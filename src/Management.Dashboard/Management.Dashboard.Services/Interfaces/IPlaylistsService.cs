@@ -8,7 +8,7 @@ namespace Management.Dashboard.Services.Interfaces
 
         Task<PlaylistModel?> GetAsync(string tenantId, string id);
 
-        Task<PlaylistWithItemModel?> GetWithMediaAsync(string tenantId, string id);
+        Task<PlaylistWithItemModel?> GetWithItemsAsync(string tenantId, string id);
 
         public Task CreateAsync(PlaylistModel newModel);
 
@@ -16,8 +16,7 @@ namespace Management.Dashboard.Services.Interfaces
 
         public Task RemoveAsync(string tenantId, string id);
 
-        public Task AddMediaToPlaylist(string tenantId, string id, string mediaId);
-
-        public Task RemoveMediaFromPlaylist(string tenantId, string id, string mediaId);
+        public Task AddToPlaylist(string tenantId, string id, string itemId, PlaylistItemType itemType);
+        public Task RemoveFromPlaylist(string tenantId, string id, string assetId);
     }
 }

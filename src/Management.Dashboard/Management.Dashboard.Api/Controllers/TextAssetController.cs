@@ -129,7 +129,7 @@ namespace Management.Dashboard.Api.Controllers
 
         [HttpPatch("text-assets/{id}/playlist/{playlistId}")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> AddMediaToPlaylist(string id, string playlistId)
+        public async Task<ActionResult> AddToPlaylist(string id, string playlistId)
         {
             var tenantId = GetRequestTenantId();
 
@@ -138,14 +138,14 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            await _playlistsService.AddMediaToPlaylist(tenantId, playlistId, id);
+            await _playlistsService.AddToPlaylist(tenantId, playlistId, id, PlaylistItemType.Text);
             return NoContent();
         }
 
 
         [HttpDelete("text-assets/{id}/playlist/{playlistId}")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> RemoveMediaFromPlaylist(string id, string playlistId)
+        public async Task<ActionResult> RemoveFromPlaylist(string id, string playlistId)
         {
             var tenantId = GetRequestTenantId();
 
@@ -154,7 +154,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            await _playlistsService.RemoveMediaFromPlaylist(tenantId, playlistId, id);
+            await _playlistsService.RemoveFromPlaylist(tenantId, playlistId, id);
             return NoContent();
         }
     }

@@ -203,7 +203,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            await _playlistsService.AddMediaToPlaylist(tenantId, playlistId, id);
+            await _playlistsService.AddToPlaylist(tenantId, playlistId, id, PlaylistItemType.Media);
             return NoContent();
         }
 
@@ -219,7 +219,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            await _playlistsService.RemoveMediaFromPlaylist(tenantId, playlistId, id);
+            await _playlistsService.RemoveFromPlaylist(tenantId, playlistId, id);
             return NoContent();
         }
 

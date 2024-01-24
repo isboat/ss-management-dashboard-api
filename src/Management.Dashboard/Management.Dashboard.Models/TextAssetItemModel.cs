@@ -3,7 +3,7 @@
 namespace Management.Dashboard.Models
 {
     [BsonIgnoreExtraElements]
-    public class TextAssetItemModel : IModelItem
+    public class TextAssetItemModel : IModelItem, IPlaylistItem
     {
         public string? Id { get; set; }
 
@@ -19,5 +19,6 @@ namespace Management.Dashboard.Models
 
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        public PlaylistItemType PlaylistType => PlaylistItemType.Text;
     }
 }

@@ -51,7 +51,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            var data = await _playlistsService.GetWithMediaAsync(tenantId, id);
+            var data = await _playlistsService.GetWithItemsAsync(tenantId, id);
             return data != null ? new JsonResult(data) : NotFound();
         }
 

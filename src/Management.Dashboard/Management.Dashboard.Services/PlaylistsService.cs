@@ -8,11 +8,16 @@ namespace Management.Dashboard.Services
     {
         private readonly IRepository<PlaylistModel> _repository;
         private readonly IAssetService _assetService;
+        private readonly ITextAssetService _textAssetService;
 
-        public PlaylistsService(IRepository<PlaylistModel> repository, IAssetService assetService)
+        public PlaylistsService(
+            IRepository<PlaylistModel> repository, 
+            IAssetService assetService, 
+            ITextAssetService textAssetService)
         {
             _repository = repository;
             _assetService = assetService;
+            _textAssetService = textAssetService;
         }
 
         public async Task CreateAsync(PlaylistModel newModel)
@@ -29,25 +34,33 @@ namespace Management.Dashboard.Services
         public async Task<PlaylistModel?> GetAsync(string tenantId, string id) =>
             await _repository.GetAsync(tenantId, id);
 
-        public async Task<PlaylistWithItemModel?> GetWithMediaAsync(string tenantId, string id)
+        public async Task<PlaylistWithItemModel?> GetWithItemsAsync(string tenantId, string id)
         {
             var playlist = await _repository.GetAsync(tenantId, id);
             if (playlist == null) return null;
 
             var withItem = new PlaylistWithItemModel(playlist);
-            if (playlist?.AssetIds != null && playlist.AssetIds.Any())
+            if (playlist?.ItemIdAndTypePairs != null && playlist.ItemIdAndTypePairs.Any())
             {
-
-                foreach (var assetId in playlist.AssetIds)
+                foreach (var assetPair in playlist.ItemIdAndTypePairs)
                 {
-                    var media = await _assetService.GetAsync(tenantId, assetId);
-                    if (media != null) 
+                    switch (assetPair.ItemType)
                     {
-                        withItem.AssetItems?.Add(media);
-                    }                    
-                }
+                        case PlaylistItemType.Media:
+                            var media = await _assetService.GetAsync(tenantId, assetPair.Id!);
+                            if (media != null) withItem.Items?.Add(media);
+                            break;
 
-                return withItem;
+                        case PlaylistItemType.Text:
+                            var textAsset = await _textAssetService.GetAsync(tenantId, assetPair.Id!);
+                            if(textAsset != null) withItem.Items?.Add(textAsset);
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                }
             }
 
             return withItem;
@@ -61,25 +74,26 @@ namespace Management.Dashboard.Services
             await _repository.UpdateAsync(id, updatedModel);
         }
 
-        public async Task AddMediaToPlaylist(string tenantId, string id, string mediaId)
+        public async Task AddToPlaylist(string tenantId, string id, string itemId, PlaylistItemType itemType)
         {
             var playlist = await _repository.GetAsync(tenantId, id);
             if (playlist == null) return;
 
-            playlist.AssetIds ??= new List<string>();
-            playlist.AssetIds.Add(mediaId);
+            playlist.ItemIdAndTypePairs ??= new List<PlaylistItemIdTypePair>();
+            playlist.ItemIdAndTypePairs.Add(new PlaylistItemIdTypePair { Id = itemId, ItemType = itemType });
 
             await this.UpdateAsync(id, playlist);
         }
 
-
-        public async Task RemoveMediaFromPlaylist(string tenantId, string id, string mediaId)
+        public async Task RemoveFromPlaylist(string tenantId, string id, string assetId)
         {
             var playlist = await _repository.GetAsync(tenantId, id);
-            if (playlist == null) return;
+            if (playlist?.ItemIdAndTypePairs == null) return;
 
-            playlist.AssetIds ??= new List<string>();
-            playlist.AssetIds.Remove(mediaId);
+            var pair = playlist.ItemIdAndTypePairs.FirstOrDefault(x => x.Id == assetId);
+            if (pair == null) return;
+
+            playlist.ItemIdAndTypePairs.Remove(pair);
 
             await this.UpdateAsync(id, playlist);
         }

@@ -37,7 +37,7 @@ namespace Management.Dashboard.Services
 
             if(!string.IsNullOrEmpty(screenDetails.PlaylistId))
             {
-                screenDetails.PlaylistData = await _playlistsService.GetWithMediaAsync(tenantId, screenDetails.PlaylistId);
+                screenDetails.PlaylistData = await _playlistsService.GetWithItemsAsync(tenantId, screenDetails.PlaylistId);
             }
 
             if (!string.IsNullOrEmpty(screenDetails.MediaAssetEntityId))
