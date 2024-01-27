@@ -11,9 +11,9 @@ namespace Management.Dashboard.Services
 {
     public class S3UploadService : IUploadService
     {
-        private const string bucketName = "sdfdsf";
-        private const string accessKey = "ACCESSKEY";
-        private const string secretKey = "SECRETKEY";
+        private const string bucketName = "isboatscreenservice";
+        private const string accessKey = "AKIA5SW2KVX4TFYB2K6K";
+        private const string secretKey = "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";
 
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.EUWest2;
         public S3UploadService()

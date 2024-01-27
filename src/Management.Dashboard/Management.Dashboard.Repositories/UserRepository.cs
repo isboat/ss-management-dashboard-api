@@ -32,6 +32,9 @@ namespace Management.Dashboard.Repositories
         public async Task<UserModel?> GetByEmailPasswordAsync(string email, string password) =>
             await _collection.Find(x => x.Email == email && x.Password == password).FirstOrDefaultAsync();
 
+        public async Task<UserModel?> GetByEmailAsync(string email) =>
+            await _collection.Find(x => x.Email == email).FirstOrDefaultAsync();
+
         public async Task CreateAsync(UserModel newTenant) =>
             await _collection.InsertOneAsync(newTenant);
 
@@ -45,7 +48,6 @@ namespace Management.Dashboard.Repositories
             existingUser.ModifiedDate = DateTime.UtcNow;
             existingUser.Name = updateModel.Name;
             existingUser.Email = updateModel.Email;
-            existingUser.Password = updateModel.Password;
             existingUser.Role = updateModel.Role;
 
             await _collection.ReplaceOneAsync(x => x.Id == id, existingUser);

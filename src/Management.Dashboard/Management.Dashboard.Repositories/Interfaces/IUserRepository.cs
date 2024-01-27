@@ -3,5 +3,6 @@
     public interface IUserRepository<T> : IRepository<T>
     {
         Task<T?> GetByEmailPasswordAsync(string email, string password);
+        Task<T?> GetByEmailAsync(string email);
     }
 }

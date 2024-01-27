@@ -149,6 +149,8 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IPublishService, PublishService>();
             builder.Services.AddSingleton<IAiService, StabilityAiService>();
             builder.Services.AddSingleton<IPlaylistsService, PlaylistsService>();
+            builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
+
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 
             builder.Services.AddSingleton<IDateTimeProvider, SystemDatetimeProvider>();

@@ -14,22 +14,30 @@ namespace Management.Dashboard.Services
     {
         private readonly IJwtService _jwtService;
         private readonly IUserRepository<UserModel> _userRepository;
+        private readonly IEncryptionService _encryptionService;
 
-        public UserAuthenticationService(IJwtService jwtService, IUserRepository<UserModel> userRepository)
+        public UserAuthenticationService(
+            IJwtService jwtService, 
+            IUserRepository<UserModel> userRepository, 
+            IEncryptionService encryptionService)
         {
             _jwtService = jwtService;
             _userRepository = userRepository;
+            _encryptionService = encryptionService;
         }
 
         public async Task<LoginResponseModel?> Login(LoginModel model)
         {
-            if (string.IsNullOrEmpty(model.Username))
+            if (string.IsNullOrEmpty(model.Username) || string.IsNullOrEmpty(model.Password))
             {
                 return null;
             }
 
-            var dbUser = await _userRepository.GetByEmailPasswordAsync(model.Username, model.Password!);
-            if (dbUser == null) return null;
+            var dbUser = await _userRepository.GetByEmailAsync(model.Username);
+            if (string.IsNullOrEmpty(dbUser?.Password)) return null;
+
+            var verified = _encryptionService.Verify(model.Password, dbUser.Password);
+            if(!verified) return null;
 
             var tokenData = new Dictionary<string, string>
             {

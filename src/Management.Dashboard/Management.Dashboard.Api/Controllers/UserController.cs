@@ -62,8 +62,15 @@ namespace Management.Dashboard.Api.Controllers
 
             model.TenantId = tenantId;
 
-            await _userService.CreateAsync(model);
-            return NoContent();
+            try
+            {
+                await _userService.CreateAsync(model);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult(ex.Message);
+            }
         }
 
         [HttpPatch("users")]

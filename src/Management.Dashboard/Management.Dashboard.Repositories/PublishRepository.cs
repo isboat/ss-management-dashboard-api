@@ -1,6 +1,8 @@
 ﻿using Management.Dashboard.Models;
 using Management.Dashboard.Repositories.Interfaces;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace Management.Dashboard.Repositories
@@ -15,6 +17,11 @@ namespace Management.Dashboard.Repositories
         {
             _client = new MongoClient(
             settings.Value.ConnectionString);
+            var objectSerializer = new ObjectSerializer(
+                type => ObjectSerializer.DefaultAllowedTypes(type) 
+                || type.FullName.StartsWith("Management.Dashboard")); 
+            
+            BsonSerializer.RegisterSerializer(objectSerializer);
         }
 
         public async Task<bool> PublishScreenAsync(DetailedScreenModel model)

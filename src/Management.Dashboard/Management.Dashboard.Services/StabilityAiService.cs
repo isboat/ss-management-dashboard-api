@@ -52,7 +52,7 @@ namespace Management.Dashboard.Services
         {
             using HttpClient client = new();
             using var req = new HttpRequestMessage(HttpMethod.Post, "URL_HERE");
-            var apikey = "API-KEY";
+            var apikey = "sk-mArvRyh4uXogRs7vblAjeDt4XtDgKlIdDANVVLViHeI8tgp5";
 
             var imageRequest = new ImageRequest 
             { 
