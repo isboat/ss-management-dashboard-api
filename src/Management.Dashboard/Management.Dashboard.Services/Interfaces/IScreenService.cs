@@ -13,10 +13,10 @@ namespace Management.Dashboard.Services.Interfaces
 
         Task<ScreenModel?> GetAsync(string tenantId, string id);
 
-        public Task CreateAsync(ScreenModel newModel);
+        public Task CreateAsync(ScreenModel newModel, string creator);
 
-        public Task UpdateAsync(string id, ScreenModel updatedModel);
+        public Task UpdateAsync(string id, ScreenModel updatedModel, string updator);
 
-        public Task RemoveAsync(string tenantId, string id);
+        public Task RemoveAsync(string tenantId, string id, string deletor);
     }
 }

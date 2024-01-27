@@ -24,6 +24,9 @@ namespace Management.Dashboard.Models
         public string? TextEditorData { get; set; } = string.Empty;
 
         public string? PlaylistId { get; set; }
+
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 
     [BsonIgnoreExtraElements]

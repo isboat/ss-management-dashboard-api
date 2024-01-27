@@ -14,6 +14,6 @@ namespace Management.Dashboard.Models.Authentication
 
     public class LoginResponseModel
     {
-        public string Token { get; set; }
+        public string? Token { get; set; }
     }
 }

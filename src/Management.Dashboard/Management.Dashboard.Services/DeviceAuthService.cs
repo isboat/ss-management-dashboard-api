@@ -11,7 +11,10 @@ namespace Management.Dashboard.Services
         private readonly ITenantRepository _tenantRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public DeviceAuthService(IDeviceAuthRepository<DeviceAuthModel> repository, IDateTimeProvider dateTimeProvider, ITenantRepository tenantRepository)
+        public DeviceAuthService(
+            IDeviceAuthRepository<DeviceAuthModel> repository, 
+            IDateTimeProvider dateTimeProvider, 
+            ITenantRepository tenantRepository)
         {
             _repository = repository;
             _dateTimeProvider = dateTimeProvider;
@@ -19,7 +22,7 @@ namespace Management.Dashboard.Services
         }
         public async Task<DeviceAuthApprovalStatus> ApproveAsync(DeviceAuthModel updatedModel)
         {
-            var tenant = await _tenantRepository.GetAsync(updatedModel.TenantId);
+            var tenant = await _tenantRepository.GetAsync(updatedModel.TenantId!);
             if (string.IsNullOrEmpty(tenant?.Id)) return DeviceAuthApprovalStatus.TenantNotFound;
 
             var currentTvs = await _repository.GetAllByTenantIdAsync(tenant.Id);

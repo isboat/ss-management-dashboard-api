@@ -6,8 +6,6 @@ using Amazon.S3.Transfer;
 using Management.Dashboard.Models.Settings;
 using Management.Dashboard.Services.Interfaces;
 using Microsoft.Extensions.Options;
-using SharpCompress.Common;
-using System.IO;
 
 namespace Management.Dashboard.Services
 {
@@ -90,7 +88,7 @@ namespace Management.Dashboard.Services
                     , e.Message);
             }
 
-            return null;
+            return null!;
         }
 
         private string CreateS3Url(RegionEndpoint bucketRegion, string key)

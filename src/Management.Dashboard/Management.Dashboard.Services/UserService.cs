@@ -18,7 +18,7 @@ namespace Management.Dashboard.Services
         public async Task<IEnumerable<UserModel>> GetUsersAsync(string tenantId)
         { 
             var dbusers = await _repository.GetAllByTenantIdAsync(tenantId);
-            if (dbusers == null) return null;
+            if (dbusers == null) return null!;
 
             dbusers.ForEach(x => x.Password = null);
             return dbusers;
@@ -38,13 +38,13 @@ namespace Management.Dashboard.Services
 
             AddId(newModel);
             newModel.Password = _encryptionService.Encrypt(newModel.Password!)?.Hashed;
-            newModel.Created = DateTime.UtcNow;
+            
             await _repository.CreateAsync(newModel);
         }
 
         private async Task<bool> UserExist(string? email)
         {
-            var user = await _repository.GetByEmailAsync(email);
+            var user = await _repository.GetByEmailAsync(email!);
             return user != null;
         }
 

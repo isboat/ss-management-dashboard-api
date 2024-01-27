@@ -66,7 +66,6 @@ namespace Management.Dashboard.Common
         private static byte[] ObjectToByteArray(Object objectToSerialize)
         {
             MemoryStream fs = new();
-            BinaryFormatter formatter = new();
             try
             {
                 //Here's the core functionality! One Line!
@@ -80,7 +79,7 @@ namespace Management.Dashboard.Common
             catch (SerializationException se)
             {
                 Console.WriteLine("Error occured during serialization. Message: " + se.Message);
-                return null;
+                return null!;
             }
             finally
             {
@@ -96,14 +95,14 @@ namespace Management.Dashboard.Common
         /// <returns>The MD5 hash of the object as a string or null if it couldn't be generated.</returns>
         private static string ComputeHash(byte[] objectAsBytes)
         {
-            MD5 md5 = new MD5CryptoServiceProvider();
+            MD5 md5 = MD5.Create();
             try
             {
                 byte[] result = md5.ComputeHash(objectAsBytes);
 
                 // Build the final string by converting each byte
                 // into hex and appending it to a StringBuilder
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 for (int i = 0; i < result.Length; i++)
                 {
                     sb.Append(result[i].ToString("X2"));
@@ -116,7 +115,7 @@ namespace Management.Dashboard.Common
             {
                 //If something occured during serialization, this method is called with an null argument. 
                 Console.WriteLine("Hash has not been generated.");
-                return null;
+                return null!;
             }
         }
     }

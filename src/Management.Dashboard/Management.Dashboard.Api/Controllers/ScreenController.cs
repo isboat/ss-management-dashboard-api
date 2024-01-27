@@ -69,7 +69,7 @@ namespace Management.Dashboard.Api.Controllers
 
             screenModel.TenantId = tenantId;
 
-            await _screenService.CreateAsync(screenModel);
+            await _screenService.CreateAsync(screenModel, GetAuthorizedUserInitials());
             return NoContent();
         }
 
@@ -82,7 +82,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            await _screenService.UpdateAsync(screenModel.Id, screenModel);
+            await _screenService.UpdateAsync(screenModel.Id, screenModel, GetAuthorizedUserInitials());
             return NoContent();
         }
 
@@ -95,8 +95,8 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            await _screenService.RemoveAsync(tenantId, id);
-            _ = _publishService.ArchiveDataAsync(tenantId, id);
+            await _screenService.RemoveAsync(tenantId, id, GetAuthorizedUserInitials());
+            _ = _publishService.ArchiveDataAsync(tenantId, id, GetAuthorizedUserInitials());
             return NoContent();
         }
     }

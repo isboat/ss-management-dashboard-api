@@ -10,5 +10,7 @@ namespace Management.Dashboard.Models
         public string? TenantId { get; set; }
 
         public string? ScreenId { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 }

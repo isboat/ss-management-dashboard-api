@@ -23,12 +23,16 @@ namespace Management.Dashboard.Repositories
             await GetAsync<HistoryModel>(tenantId, CollectionName, id);
 
 
-        public async Task CreateAsync(HistoryModel newTenant) =>
-            await CreateAsync(newTenant.TenantId!, CollectionName, newTenant);
+        public async Task CreateAsync(HistoryModel model)
+        {
+            model.Id = Guid.NewGuid().ToString("N");
+            await CreateAsync(model.TenantId!, CollectionName, model);
+        }
 
         public async Task RemoveAsync(string tenantId, string id)
         {
-            await RemoveAsync<HistoryModel>(tenantId, CollectionName, id);
+            await Task.CompletedTask;
+            //await RemoveAsync<HistoryModel>(tenantId, CollectionName, id);
         }
 
         public async Task<IEnumerable<HistoryModel>> GetItemHistoriesAsync(string tenantId, string historyItemId)

@@ -13,7 +13,9 @@ namespace Management.Dashboard.Models
 
         public TimeSpan? ItemDuration { get; set; }
 
-        public DateTime? Created { get; set; }
+        public DateTime? CreatedOn { get; set; }
+
+        public DateTime? UpdatedOn { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
 
@@ -29,7 +31,7 @@ namespace Management.Dashboard.Models
             this.Id = model?.Id;
             this.TenantId = model?.TenantId;
             this.Name = model?.Name;
-            this.Created = model?.Created;
+            this.CreatedOn = model?.CreatedOn;
             this.ModifiedDate = model?.ModifiedDate;
             this.AssetIds = model?.AssetIds;
             this.ItemDuration = model?.ItemDuration;

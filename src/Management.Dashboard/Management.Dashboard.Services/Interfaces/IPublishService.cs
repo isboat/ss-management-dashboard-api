@@ -2,8 +2,8 @@
 {
     public interface IPublishService
     {
-        Task<bool> PublishScreenAsync(string tenantId, string id);
+        Task<bool> PublishScreenAsync(string tenantId, string id, string user);
 
-        Task<bool> ArchiveDataAsync(string tenantId, string id);
+        Task<bool> ArchiveDataAsync(string tenantId, string id, string user);
     }
 }

@@ -36,12 +36,14 @@ namespace Management.Dashboard.Repositories
         public async Task CreateAsync(AssetItemModel newModel)
         {
             EnsureIdNotNull(newModel);
+            newModel.CreatedOn = DateTime.UtcNow;
             await GetTenantScreenCollection(newModel.TenantId!).InsertOneAsync(newModel);
         }
 
         public async Task UpdateAsync(string id, AssetItemModel updatedModel)
         {
             EnsureIdNotNull(updatedModel);
+            updatedModel.UpdatedOn = DateTime.UtcNow;
             await GetTenantScreenCollection(updatedModel.TenantId!).ReplaceOneAsync(x => x.Id == id, updatedModel);
         }
 

@@ -86,11 +86,11 @@ namespace Management.Dashboard.Api.Controllers
             bool isImageFile;
             if (model.IsAi)
             {
-                var aiImagePath = await _aiService.GenerateAsync(model.Description, tenantId);
+                var aiImagePath = await _aiService.GenerateAsync(model.Description!, tenantId);
 
                 if (aiImagePath == null) return BadRequest("ai_image_path_null");
 
-                fileName = $"{model.Title.Replace(" ", "_")}.png";
+                fileName = $"{model.Title!.Replace(" ", "_")}.png";
                 var file = System.IO.File.OpenRead(aiImagePath);
                 storagePath = await _uploadService.UploadAsync(tenantId, fileName, file);
                 isImageFile = true;
@@ -163,10 +163,10 @@ namespace Management.Dashboard.Api.Controllers
                 return NotFound();
             }
 
-            var deleteResult = await _uploadService.RemoveAsync(tenantId, dBAsset.FileName);
+            var deleteResult = await _uploadService.RemoveAsync(tenantId, dBAsset.FileName!);
             if (!deleteResult) return BadRequest("unable_to_delete");
 
-            await _assetService.RemoveAsync(tenantId, dBAsset.Id);
+            await _assetService.RemoveAsync(tenantId, dBAsset.Id!);
             return NoContent();
         }
 
@@ -227,9 +227,9 @@ namespace Management.Dashboard.Api.Controllers
 
     public class MediaUploadModel
     {
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public bool IsAi { get; set; }
 

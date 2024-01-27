@@ -32,7 +32,7 @@ namespace Management.Dashboard.Services
 
         public async Task StoreAsync(HistoryModel model)
         {
-            model.DateTimeStamp = DateTime.UtcNow;
+            model.CreatedOn = DateTime.UtcNow;
             await _repository.CreateAsync(model);
         }
     }

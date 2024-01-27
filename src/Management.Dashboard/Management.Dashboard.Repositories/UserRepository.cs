@@ -36,8 +36,11 @@ namespace Management.Dashboard.Repositories
         public async Task<UserModel?> GetByEmailAsync(string email) =>
             await _collection.Find(x => x.Email == email).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(UserModel newTenant) =>
-            await _collection.InsertOneAsync(newTenant);
+        public async Task CreateAsync(UserModel newModel)
+        {
+            newModel.CreatedOn = DateTime.UtcNow;
+            await _collection.InsertOneAsync(newModel);
+        }
 
         public async Task UpdateAsync(string id, UserModel updateModel)
         {
@@ -46,10 +49,10 @@ namespace Management.Dashboard.Repositories
             var existingUser = await this.GetAsync(updateModel?.TenantId!, id);
             if (existingUser == null) return;
 
-            existingUser.ModifiedDate = DateTime.UtcNow;
-            existingUser.Name = updateModel.Name;
-            existingUser.Email = updateModel.Email;
-            existingUser.Role = updateModel.Role;
+            existingUser.UpdatedOn = DateTime.UtcNow;
+            existingUser.Name = updateModel?.Name!;
+            existingUser.Email = updateModel?.Email;
+            existingUser.Role = updateModel?.Role;
 
             await _collection.ReplaceOneAsync(x => x.Id == id, existingUser);
         }

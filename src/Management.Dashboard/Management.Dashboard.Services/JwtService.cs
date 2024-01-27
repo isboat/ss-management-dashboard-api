@@ -11,9 +11,9 @@ namespace Management.Dashboard.Services
     public class JwtService : IJwtService
     {
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
-        private readonly string _jwtIssuer;
-        private readonly string _jwtAudience;
-        private readonly string _jwtSigningKey;
+        private readonly string? _jwtIssuer;
+        private readonly string? _jwtAudience;
+        private readonly string? _jwtSigningKey;
 
         public JwtService(IOptions<JwtSettings> settings)
         {
@@ -26,7 +26,7 @@ namespace Management.Dashboard.Services
 
         public string GenerateToken(IDictionary<string, string> tokenData, DateTime? expiresOn)
         {
-            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSigningKey));
+            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSigningKey!));
 
             var claims = tokenData.Select(x => new Claim(x.Key, x.Value)).ToArray();
 
@@ -45,7 +45,7 @@ namespace Management.Dashboard.Services
 
         public void ValidateToken(string token)
         {
-            var claimsPrincipal = _jwtSecurityTokenHandler.ValidateToken(token,
+            _ = _jwtSecurityTokenHandler.ValidateToken(token,
                 new TokenValidationParameters
                 {
                     RequireExpirationTime = true,
@@ -59,7 +59,7 @@ namespace Management.Dashboard.Services
                     // Allow for some drift in server time
                     // (a lower value is better; we recommend two minutes or less)
                     ClockSkew = TimeSpan.FromSeconds(0),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSigningKey))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSigningKey!))
                 }, out var securityToken);
 
             if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))

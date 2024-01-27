@@ -140,7 +140,7 @@ namespace Management.Dashboard.Api
 
             var objectSerializer = new ObjectSerializer(
                 type => ObjectSerializer.DefaultAllowedTypes(type)
-                || type.FullName.StartsWith("Management.Dashboard"));
+                || (type?.FullName != null && type.FullName.StartsWith("Management.Dashboard")));
 
             BsonSerializer.RegisterSerializer(objectSerializer);
 
@@ -200,7 +200,7 @@ namespace Management.Dashboard.Api
 
                                 ValidIssuer = settings.Issuer,
                                 ValidAudience = settings.Audience,
-                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(settings.SigningKey))
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(settings.SigningKey!))
                             };
                         });
             }

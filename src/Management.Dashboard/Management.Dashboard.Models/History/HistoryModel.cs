@@ -1,5 +1,8 @@
-﻿namespace Management.Dashboard.Models.History
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace Management.Dashboard.Models.History
 {
+    [BsonIgnoreExtraElements]
     public class HistoryModel : IModelItem
     {
         public string? ItemId { get; set; }
@@ -13,9 +16,9 @@
 
         public string? User { get; set; }
 
-        public DateTime DateTimeStamp { get; set; }
-
         public string? Id { get; set; }
         public string? TenantId { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 }

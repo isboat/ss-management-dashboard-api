@@ -17,9 +17,9 @@ namespace Management.Dashboard.Models
 
         public UserRoles? Role { get; set; }
 
-        public DateTime? Created { get; set; }
+        public DateTime? CreatedOn { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 
     public enum UserRoles

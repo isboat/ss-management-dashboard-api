@@ -17,5 +17,9 @@ namespace Management.Dashboard.Models
 
         public string? DiscountPrice { get; set; }
         public string? TenantId { get; set; }
+
+        public DateTime? CreatedOn { get; set; }
+
+        public DateTime? UpdatedOn { get; set; }
     }
 }

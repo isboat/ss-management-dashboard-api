@@ -27,12 +27,14 @@ namespace Management.Dashboard.Repositories
         public async Task CreateAsync(PlaylistModel newModel)
         {
             EnsureIdNotNull(newModel);
+            newModel.CreatedOn = DateTime.UtcNow;
             await CreateAsync(newModel.TenantId!, CollectionName, newModel);
         }
 
         public async Task UpdateAsync(string id, PlaylistModel updatedModel)
         {
             EnsureIdNotNull(updatedModel);
+            updatedModel.UpdatedOn = DateTime.UtcNow;
             await GetTenantCollection<PlaylistModel>(updatedModel.TenantId!, CollectionName).ReplaceOneAsync(x => x.Id == id, updatedModel);
         }
 

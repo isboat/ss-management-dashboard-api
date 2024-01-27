@@ -23,6 +23,8 @@ namespace Management.Dashboard.Models
         public string? Currency { get; set; }
 
         public string? IconUrl { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
 
         public IEnumerable<MenuItem>? MenuItems { get; set; }
     }

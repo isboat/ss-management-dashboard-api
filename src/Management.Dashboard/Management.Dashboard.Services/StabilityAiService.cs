@@ -61,15 +61,16 @@ namespace Management.Dashboard.Services
                     var imageResponse = JsonConvert.DeserializeObject<ImageResponse>(responseString);
                     
                     if (imageResponse?.Artifacts == null || !imageResponse.Artifacts.Any()) throw new AiImageGenerationException("AI image response is null");
+                    var artifact = imageResponse.Artifacts.FirstOrDefault() ?? throw new AiImageGenerationException("AI image response is null");
                     
-                    var dataByte = Convert.FromBase64String(imageResponse.Artifacts.FirstOrDefault()?.Base64);
+                    var dataByte = Convert.FromBase64String(artifact.Base64!);
                     
                     return await DownloadImageAsync("images", "imageFile", dataByte);
                 }
             }
             else
             {
-                var dd = await response?.Content?.ReadAsStringAsync();
+                //var dd = await response.Content.ReadAsStringAsync();
             }
 
             return null;
@@ -108,7 +109,7 @@ namespace Management.Dashboard.Services
     public class ImageTextPrompt
     {
         [JsonProperty("text")]
-        public string Text { get; set; } = string.Empty;
+        public string? Text { get; set; } = string.Empty;
 
         [JsonProperty("weight")]
         public int Weight { get; set; } = 1;
@@ -125,14 +126,14 @@ namespace Management.Dashboard.Services
     {
 
         [JsonProperty("base64")]
-        public string Base64 { get; set; }
+        public string? Base64 { get; set; }
 
 
         [JsonProperty("seed")]
-        public string Seed { get; set; }
+        public string? Seed { get; set; }
 
 
         [JsonProperty("finishReason")]
-        public string FinishReason { get; set; }
+        public string? FinishReason { get; set; }
     }
 }

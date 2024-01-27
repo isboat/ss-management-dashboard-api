@@ -24,6 +24,9 @@ namespace Management.Dashboard.Models
 
         public AssetType? Type { get; set; }
         public PlaylistItemType PlaylistType => PlaylistItemType.Media;
+
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 
     public enum AssetType
