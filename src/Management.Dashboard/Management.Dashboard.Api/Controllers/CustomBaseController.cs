@@ -14,6 +14,20 @@ namespace Management.Dashboard.Api.Controllers
             if (tenantClaim == null)
             {
                 //throw new InvalidTenantException();
+                throw new Exception("tenant_not_found_in_claims");
+            }
+
+            return tenantClaim.Value;
+        }
+
+        [NonAction]
+        public string GetAuthorizedUserInitials()
+        {
+            var tenantClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("initials", StringComparison.OrdinalIgnoreCase));
+            if (tenantClaim == null)
+            {
+                //throw new InvalidTenantException();
+                throw new Exception("initials_not_found_in_claims");
             }
 
             return tenantClaim.Value;

@@ -1,47 +1,39 @@
 ﻿using Management.Dashboard.Models;
+using Management.Dashboard.Models.Settings;
 using Management.Dashboard.Repositories.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Management.Dashboard.Repositories
 {
-    public class PlaylistsRepository : IRepository<PlaylistModel>
+    public class PlaylistsRepository : BaseRepository, IRepository<PlaylistModel>
     {
-        private readonly MongoClient _client;
         private readonly string CollectionName = "Playlists";
 
-        public PlaylistsRepository(IOptions<MongoSettings> settings)
+        public PlaylistsRepository(IOptions<MongoSettings> settings):base(settings)
         {
-            _client = new MongoClient(
-            settings.Value.ConnectionString);
-        }
-
-        private IMongoCollection<PlaylistModel> GetTenantScreenCollection(string tenantId)
-        {
-            var database = _client.GetDatabase(tenantId);
-            return database.GetCollection<PlaylistModel>(CollectionName);
         }
 
         public async Task<List<PlaylistModel>> GetAllByTenantIdAsync(string tenantId)
         {
-            return await GetTenantScreenCollection(tenantId).Find(x => x.TenantId == tenantId).ToListAsync();
+            return await GetAllByTenantIdAsync<PlaylistModel>(tenantId, CollectionName);
         }
 
         public async Task<PlaylistModel?> GetAsync(string tenantId, string id)
         {
-            return await GetTenantScreenCollection(tenantId).Find(x => x.Id == id && x.TenantId == tenantId).FirstOrDefaultAsync();
+            return await GetAsync<PlaylistModel>(tenantId, CollectionName, id);
         }
 
         public async Task CreateAsync(PlaylistModel newModel)
         {
             EnsureIdNotNull(newModel);
-            await GetTenantScreenCollection(newModel.TenantId!).InsertOneAsync(newModel);
+            await CreateAsync(newModel.TenantId!, CollectionName, newModel);
         }
 
         public async Task UpdateAsync(string id, PlaylistModel updatedModel)
         {
             EnsureIdNotNull(updatedModel);
-            await GetTenantScreenCollection(updatedModel.TenantId!).ReplaceOneAsync(x => x.Id == id, updatedModel);
+            await GetTenantCollection<PlaylistModel>(updatedModel.TenantId!, CollectionName).ReplaceOneAsync(x => x.Id == id, updatedModel);
         }
 
         public async Task RemoveAsync(string tenantId, string id)
@@ -49,7 +41,7 @@ namespace Management.Dashboard.Repositories
             if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
             if (string.IsNullOrEmpty(tenantId)) throw new ArgumentNullException(nameof(tenantId));
 
-            await GetTenantScreenCollection(tenantId).DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
+            await RemoveAsync<PlaylistModel>(tenantId, CollectionName, id);
         }
 
         private static void EnsureIdNotNull(PlaylistModel newModel)

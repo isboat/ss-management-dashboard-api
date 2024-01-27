@@ -13,9 +13,9 @@ namespace Management.Dashboard.Api.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IUserAuthenticationService _userAuthenticationService;
+        private readonly ILoginService _userAuthenticationService;
 
-        public AuthenticationController(IUserAuthenticationService userAuthenticationService)
+        public AuthenticationController(ILoginService userAuthenticationService)
         {
             _userAuthenticationService = userAuthenticationService;
         }

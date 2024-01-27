@@ -16,14 +16,15 @@ namespace Management.Dashboard.Services
             _previewService = previewService;
         }
 
-        public async Task<bool> PublishDataAsync(string tenantId, string id)
+        public async Task<bool> PublishScreenAsync(string tenantId, string id)
         {
             var screenData = await _previewService.GetDataAsync(tenantId, id);
             if (screenData == null) return false;
 
             screenData.Checksum = MD5HashGenerator.GenerateKey(screenData);
 
-            return await _repository.PublishScreenAsync(screenData);
+            var result = await _repository.PublishScreenAsync(screenData);
+            return result;
         }
 
         public async Task<bool> ArchiveDataAsync(string tenantId, string id)

@@ -1,47 +1,38 @@
 ﻿using Management.Dashboard.Models;
+using Management.Dashboard.Models.Settings;
 using Management.Dashboard.Repositories.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Management.Dashboard.Repositories
 {
-    public class MenuRepository : IRepository<MenuModel>
+    public class MenuRepository : BaseRepository, IRepository<MenuModel>
     {
-        private readonly MongoClient _client;
         private readonly string CollectionName = "Menus";
 
-        public MenuRepository(IOptions<MongoSettings> settings)
-        {
-            _client = new MongoClient(
-            settings.Value.ConnectionString);
-        }
+        public MenuRepository(IOptions<MongoSettings> settings):base(settings) { }
 
-        private IMongoCollection<MenuModel> GetTenantScreenCollection(string tenantId)
-        {
-            var database = _client.GetDatabase(tenantId);
-            return database.GetCollection<MenuModel>(CollectionName);
-        }
 
         public async Task<List<MenuModel>> GetAllByTenantIdAsync(string tenantId)
         {
-            return await GetTenantScreenCollection(tenantId).Find(x => x.TenantId == tenantId).ToListAsync();
+            return await GetAllByTenantIdAsync<MenuModel>(tenantId, CollectionName);
         }
 
         public async Task<MenuModel?> GetAsync(string tenantId, string id)
         {
-            return await GetTenantScreenCollection(tenantId).Find(x => x.Id == id && x.TenantId == tenantId).FirstOrDefaultAsync();
+            return await GetAsync<MenuModel>(tenantId, CollectionName, id);
         }
 
         public async Task CreateAsync(MenuModel newModel)
         {
             EnsureIdNotNull(newModel);
-            await GetTenantScreenCollection(newModel.TenantId!).InsertOneAsync(newModel);
+            await CreateAsync(newModel.TenantId!, CollectionName, newModel);
         }
 
         public async Task UpdateAsync(string id, MenuModel updatedModel)
         {
             EnsureIdNotNull(updatedModel);
-            await GetTenantScreenCollection(updatedModel.TenantId!).ReplaceOneAsync(x => x.Id == id, updatedModel);
+            await GetTenantCollection<MenuModel>(updatedModel.TenantId!, CollectionName).ReplaceOneAsync(x => x.Id == id, updatedModel);
         }
 
         public async Task RemoveAsync(string tenantId, string id)
@@ -49,7 +40,7 @@ namespace Management.Dashboard.Repositories
             if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
             if (string.IsNullOrEmpty(tenantId)) throw new ArgumentNullException(nameof(tenantId));
 
-            await GetTenantScreenCollection(tenantId).DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
+            await RemoveAsync<MenuModel>(tenantId, CollectionName, id);
         }
 
         private static void EnsureIdNotNull(MenuModel newModel)

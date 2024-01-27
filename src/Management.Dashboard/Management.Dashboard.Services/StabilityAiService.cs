@@ -2,38 +2,23 @@
 using Newtonsoft.Json;
 using Management.Dashboard.Exceptions;
 using System.Text;
+using Management.Dashboard.Models.Settings;
+using Microsoft.Extensions.Options;
 
 namespace Management.Dashboard.Services
 {
     public class StabilityAiService : IAiService
     {
-        public StabilityAiService()
+        private readonly StabilityAiSettings _settings;
+        public StabilityAiService(IOptions<StabilityAiSettings> settings)
         {
+            _settings = settings.Value;
         }
 
         public async Task<string?> GenerateAsync(string inputText, string tenantId)
         {
             var url = await ExecuteImagePrompt(inputText);
             return url;
-        }
-
-        private static async Task<string?> DownloadImageAsync(string directoryPath, string fileName, Uri uri)
-        {
-            using var httpClient = new HttpClient();
-
-            // Get the file extension
-            var uriWithoutQuery = uri.GetLeftPart(UriPartial.Path);
-            var fileExtension = Path.GetExtension(uriWithoutQuery);
-
-            // Create file path and ensure directory exists
-            var path = Path.Combine(directoryPath, $"{fileName}{fileExtension}");
-            Directory.CreateDirectory(directoryPath);
-
-            // Download the image and write to the file
-            var imageBytes = await httpClient.GetByteArrayAsync(uri);
-            await File.WriteAllBytesAsync(path, imageBytes);
-
-            return path;
         }
 
         private static async Task<string?> DownloadImageAsync(string directoryPath, string fileName, byte[] dataByte)
@@ -48,11 +33,10 @@ namespace Management.Dashboard.Services
             return path;
         }
 
-        private static async Task<string?> ExecuteImagePrompt(string prompt)
+        private async Task<string?> ExecuteImagePrompt(string prompt)
         {
             using HttpClient client = new();
-            using var req = new HttpRequestMessage(HttpMethod.Post, "URL_HERE");
-            var apikey = "sk-mArvRyh4uXogRs7vblAjeDt4XtDgKlIdDANVVLViHeI8tgp5";
+            using var req = new HttpRequestMessage(HttpMethod.Post, _settings.ApiUrl);
 
             var imageRequest = new ImageRequest 
             { 
@@ -62,7 +46,7 @@ namespace Management.Dashboard.Services
                 }
             };
 
-            req.Headers.Add("Authorization", $"Bearer {apikey}");
+            req.Headers.Add("Authorization", $"Bearer {_settings.Apikey}");
             req.Headers.Add("Accept", "application/json");
 
             var reqContent = JsonConvert.SerializeObject(imageRequest);

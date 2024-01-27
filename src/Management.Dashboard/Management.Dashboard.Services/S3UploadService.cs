@@ -3,7 +3,9 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using Management.Dashboard.Models.Settings;
 using Management.Dashboard.Services.Interfaces;
+using Microsoft.Extensions.Options;
 using SharpCompress.Common;
 using System.IO;
 
@@ -11,13 +13,17 @@ namespace Management.Dashboard.Services
 {
     public class S3UploadService : IUploadService
     {
-        private const string bucketName = "isboatscreenservice";
-        private const string accessKey = "AKIA5SW2KVX4TFYB2K6K";
-        private const string secretKey = "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";
+        private readonly string? _bucketName;
+        private readonly string? _accessKey;
+        private readonly string? _secretKey;
 
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.EUWest2;
-        public S3UploadService()
+        public S3UploadService(IOptions<S3Settings> settings)
         {
+            _bucketName = settings.Value.BucketName;
+            _accessKey = settings.Value.AccessKey;
+            _secretKey = settings.Value.SecretKey;
+
         }
 
         public async Task<bool> RemoveAsync(string tenantId, string fileName)
@@ -25,14 +31,14 @@ namespace Management.Dashboard.Services
             try
             {
                 // Set up your AWS credentials
-                var credentials = new BasicAWSCredentials(accessKey, secretKey);
+                var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
                 using var s3Client = new AmazonS3Client(credentials, bucketRegion);
 
                 var keyName = CreatePath(tenantId, fileName);
 
                 var deleteObjectRequest = new DeleteObjectRequest
                 {
-                    BucketName = bucketName,
+                    BucketName = _bucketName,
                     Key = keyName
                 };
 
@@ -62,12 +68,12 @@ namespace Management.Dashboard.Services
                 using (stream)
                 {
                     // Set up your AWS credentials
-                    var credentials = new BasicAWSCredentials(accessKey, secretKey);
+                    var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
                     using var s3Client = new AmazonS3Client(credentials, bucketRegion);
                     var fileTransferUtility = new TransferUtility(s3Client);
 
                     var key = CreatePath(tenantId, fileName);
-                    await fileTransferUtility.UploadAsync(stream, bucketName, key);
+                    await fileTransferUtility.UploadAsync(stream, _bucketName, key);
                     return CreateS3Url(bucketRegion, key);
                 }
             }
@@ -87,11 +93,11 @@ namespace Management.Dashboard.Services
             return null;
         }
 
-        private static string CreateS3Url(RegionEndpoint bucketRegion, string key)
+        private string CreateS3Url(RegionEndpoint bucketRegion, string key)
         {
             var region = bucketRegion.SystemName;
 
-            return $"https://{bucketName}.s3.{region}.amazonaws.com/{key}";
+            return $"https://{_bucketName}.s3.{region}.amazonaws.com/{key}";
         }
 
         private static string CreatePath(string tenantId, string filename)

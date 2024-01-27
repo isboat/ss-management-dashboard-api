@@ -1,4 +1,5 @@
 ﻿using Management.Dashboard.Models;
+using Management.Dashboard.Models.Settings;
 using Management.Dashboard.Repositories.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;

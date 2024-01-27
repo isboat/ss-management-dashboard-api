@@ -1,49 +1,41 @@
 ﻿using Management.Dashboard.Models;
+using Management.Dashboard.Models.Settings;
 using Management.Dashboard.Repositories.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Management.Dashboard.Repositories
 {
-    public class TextAssetRepository : IRepository<TextAssetItemModel>
+    public class TextAssetRepository : BaseRepository, IRepository<TextAssetItemModel>
     {
-        private readonly MongoClient _client;
         private readonly string CollectionName = "TextAssetItems";
 
-        public TextAssetRepository(IOptions<MongoSettings> settings)
+        public TextAssetRepository(IOptions<MongoSettings> settings): base(settings)
         {
-            _client = new MongoClient(
-            settings.Value.ConnectionString);
-        }
-
-        private IMongoCollection<TextAssetItemModel> GetTenantScreenCollection(string tenantId)
-        {
-            var database = _client.GetDatabase(tenantId);
-            return database.GetCollection<TextAssetItemModel>(CollectionName);
         }
 
         public async Task<List<TextAssetItemModel>> GetAllByTenantIdAsync(string tenantId)
         {
-            return await GetTenantScreenCollection(tenantId).Find(x => x.TenantId == tenantId).ToListAsync();
+            return await GetAllByTenantIdAsync<TextAssetItemModel>(tenantId, CollectionName);
         }
 
         public async Task<TextAssetItemModel?> GetAsync(string tenantId, string id)
         {
-            return await GetTenantScreenCollection(tenantId).Find(x => x.Id == id && x.TenantId == tenantId).FirstOrDefaultAsync();
+            return await GetAsync<TextAssetItemModel>(tenantId, CollectionName, id);
         }
 
         public async Task CreateAsync(TextAssetItemModel newModel)
         {
             EnsureIdNotNull(newModel);
             newModel.CreatedOn = DateTime.UtcNow;
-            await GetTenantScreenCollection(newModel.TenantId!).InsertOneAsync(newModel);
+            await CreateAsync(newModel.TenantId!, CollectionName, newModel);
         }
 
         public async Task UpdateAsync(string id, TextAssetItemModel updatedModel)
         {
             EnsureIdNotNull(updatedModel);
             updatedModel.UpdatedOn = DateTime.UtcNow;
-            await GetTenantScreenCollection(updatedModel.TenantId!).ReplaceOneAsync(x => x.Id == id, updatedModel);
+            await GetTenantCollection<TextAssetItemModel>(updatedModel.TenantId!, CollectionName).ReplaceOneAsync(x => x.Id == id, updatedModel);
         }
 
         public async Task RemoveAsync(string tenantId, string id)
@@ -51,7 +43,7 @@ namespace Management.Dashboard.Repositories
             if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
             if (string.IsNullOrEmpty(tenantId)) throw new ArgumentNullException(nameof(tenantId));
 
-            await GetTenantScreenCollection(tenantId).DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
+            await RemoveAsync<TextAssetItemModel>(tenantId, CollectionName, id);
         }
 
         private static void EnsureIdNotNull(TextAssetItemModel newModel)

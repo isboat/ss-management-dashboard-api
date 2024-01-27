@@ -3,20 +3,16 @@ using Management.Dashboard.Models;
 using Management.Dashboard.Models.Authentication;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Management.Dashboard.Services
 {
-    public class UserAuthenticationService : IUserAuthenticationService
+    public class LoginService : ILoginService
     {
         private readonly IJwtService _jwtService;
         private readonly IUserRepository<UserModel> _userRepository;
         private readonly IEncryptionService _encryptionService;
 
-        public UserAuthenticationService(
+        public LoginService(
             IJwtService jwtService, 
             IUserRepository<UserModel> userRepository, 
             IEncryptionService encryptionService)

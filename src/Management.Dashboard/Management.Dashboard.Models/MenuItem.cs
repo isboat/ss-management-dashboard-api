@@ -3,7 +3,7 @@
 namespace Management.Dashboard.Models
 {
     [BsonIgnoreExtraElements]
-    public class MenuItem: IModelItem
+    public class MenuItem : IModelItem
     {
         public string? Id { get; set; }
 
@@ -16,5 +16,6 @@ namespace Management.Dashboard.Models
         public string? Price { get; set; }
 
         public string? DiscountPrice { get; set; }
+        public string? TenantId { get; set; }
     }
 }

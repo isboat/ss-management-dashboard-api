@@ -1,6 +1,7 @@
 ﻿using Amazon.Auth.AccessControlPolicy;
 using Management.Dashboard.Common.Constants;
 using Management.Dashboard.Models;
+using Management.Dashboard.Models.History;
 using Management.Dashboard.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,12 @@ namespace Management.Dashboard.Api.Controllers
     public class PublishController : CustomBaseController
     {
         private readonly IPublishService _publishService;
+        private readonly IHistoryService _historyService;
 
-        public PublishController(IPublishService publishService)
+        public PublishController(IPublishService publishService, IHistoryService historyService)
         {
             _publishService = publishService;
+            _historyService = historyService;
         }
 
 
@@ -31,7 +34,22 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            var result = await _publishService.PublishDataAsync(tenantId, id);
+            var result = await _publishService.PublishScreenAsync(tenantId, id);
+
+
+            if (result)
+            {
+                string item = nameof(ScreenModel);
+                await _historyService.StoreAsync(new HistoryModel
+                {
+                    ItemId = id,
+                    ItemType = item,
+                    Log = $"Published {item.Replace("Model","")}",
+                    TenantId = tenantId,
+                    User = GetAuthorizedUserInitials(),
+                });
+            }
+
             return result ? NoContent() : NotFound();
         }
     }

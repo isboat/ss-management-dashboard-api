@@ -3,6 +3,7 @@ using Management.Dashboard.Api.filters;
 using Management.Dashboard.Common;
 using Management.Dashboard.Common.Constants;
 using Management.Dashboard.Models;
+using Management.Dashboard.Models.Settings;
 using Management.Dashboard.Repositories;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services;
@@ -12,6 +13,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -133,6 +136,13 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IRepository<PlaylistModel>, PlaylistsRepository>();
             builder.Services.AddSingleton<ITenantRepository, TenantRepository>();
             builder.Services.AddSingleton<IPublishRepository, PublishRepository>();
+            builder.Services.AddSingleton<IHistoryRepository, HistoryRepository>();
+
+            var objectSerializer = new ObjectSerializer(
+                type => ObjectSerializer.DefaultAllowedTypes(type)
+                || type.FullName.StartsWith("Management.Dashboard"));
+
+            BsonSerializer.RegisterSerializer(objectSerializer);
 
             builder.Services.AddSingleton<IScreenService, ScreenService>();
             builder.Services.AddSingleton<IDevicesService, DevicesService>();
@@ -144,12 +154,13 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IUploadService, S3UploadService>();
             builder.Services.AddSingleton<ITemplatesService, TemplatesService>();
             builder.Services.AddSingleton<IJwtService, JwtService>();
-            builder.Services.AddSingleton<IUserAuthenticationService, UserAuthenticationService>();
+            builder.Services.AddSingleton<ILoginService, LoginService>();
             builder.Services.AddSingleton<IPreviewService, PreviewService>();
             builder.Services.AddSingleton<IPublishService, PublishService>();
             builder.Services.AddSingleton<IAiService, StabilityAiService>();
             builder.Services.AddSingleton<IPlaylistsService, PlaylistsService>();
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
+            builder.Services.AddSingleton<IHistoryService, HistoryService>();
 
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 
