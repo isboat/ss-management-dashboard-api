@@ -21,9 +21,10 @@ namespace Management.Dashboard.Repositories
             return database.GetCollection<T>(collectionName);
         }
 
-        protected async Task<List<T>> GetAllByTenantIdAsync<T>(string tenantId, string collectionName) where T: IModelItem
+        protected async Task<List<T>> GetAllByTenantIdAsync<T>(string tenantId, string collectionName, int? skip, int? limit) where T: IModelItem
         {
-            return await GetTenantCollection<T>(tenantId, collectionName).Find(x => x.TenantId == tenantId).ToListAsync();
+            return await GetTenantCollection<T>(tenantId, collectionName)
+                .Find(x => x.TenantId == tenantId).Skip(skip).Limit(limit).ToListAsync();
         }
 
         protected async Task<List<T>> GetAsync<T>(string tenantId, string collectionName)

@@ -4,7 +4,7 @@ namespace Management.Dashboard.Services.Interfaces
 {
     public interface IMenuService
     {
-        Task<IEnumerable<MenuModel>> GetMenusAsync(string tenantId);
+        Task<IEnumerable<MenuModel>> GetMenusAsync(string tenantId, int? skip, int? limit);
 
         Task<MenuModel?> GetAsync(string tenantId, string id);
 

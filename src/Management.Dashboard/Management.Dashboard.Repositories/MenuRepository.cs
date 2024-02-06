@@ -13,9 +13,9 @@ namespace Management.Dashboard.Repositories
         public MenuRepository(IOptions<MongoSettings> settings):base(settings) { }
 
 
-        public async Task<List<MenuModel>> GetAllByTenantIdAsync(string tenantId)
+        public async Task<List<MenuModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit)
         {
-            return await GetAllByTenantIdAsync<MenuModel>(tenantId, CollectionName);
+            return await GetAllByTenantIdAsync<MenuModel>(tenantId, CollectionName, skip, limit);
         }
 
         public async Task<MenuModel?> GetAsync(string tenantId, string id)

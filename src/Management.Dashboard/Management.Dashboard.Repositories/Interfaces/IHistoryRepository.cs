@@ -6,6 +6,6 @@ namespace Management.Dashboard.Repositories.Interfaces
     {
         Task<IEnumerable<HistoryModel>> GetItemHistoriesAsync(string tenantId, string historyItemId);
 
-        Task<IEnumerable<HistoryModel>> GetByItemTypeAsync(string tenantId, string historyItemType);
+        Task<IEnumerable<HistoryModel>> GetByItemTypeAsync(string tenantId, string historyItemType, int? skip, int? limit);
     }
 }

@@ -16,8 +16,8 @@ namespace Management.Dashboard.Services
             _historyService = historyService;
         }
 
-        public async Task<IEnumerable<ScreenModel>> GetScreensAsync(string tenantId) =>
-            await _repository.GetAllByTenantIdAsync(tenantId);
+        public async Task<IEnumerable<ScreenModel>> GetScreensAsync(string tenantId, int? skip, int? limit) =>
+            await _repository.GetAllByTenantIdAsync(tenantId, skip, limit);
 
         public async Task<ScreenModel?> GetAsync(string tenantId, string id)
         {

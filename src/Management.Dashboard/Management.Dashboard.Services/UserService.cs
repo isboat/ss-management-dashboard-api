@@ -15,9 +15,9 @@ namespace Management.Dashboard.Services
             _encryptionService = encryptionService;
         }
 
-        public async Task<IEnumerable<UserModel>> GetUsersAsync(string tenantId)
+        public async Task<IEnumerable<UserModel>> GetUsersAsync(string tenantId, int? skip, int? limit)
         { 
-            var dbusers = await _repository.GetAllByTenantIdAsync(tenantId);
+            var dbusers = await _repository.GetAllByTenantIdAsync(tenantId, skip, limit);
             if (dbusers == null) return null!;
 
             dbusers.ForEach(x => x.Password = null);
@@ -37,7 +37,7 @@ namespace Management.Dashboard.Services
             if (await UserExist(newModel.Email)) throw new Exception("user_with_same_email_exist");
 
             AddId(newModel);
-            newModel.Password = _encryptionService.Encrypt(newModel.Password!)?.Hashed;
+            newModel.Password = _encryptionService.Encrypt("Temporary!")?.Hashed;
             
             await _repository.CreateAsync(newModel);
         }

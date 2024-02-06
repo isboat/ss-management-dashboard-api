@@ -4,7 +4,7 @@ namespace Management.Dashboard.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserModel>> GetUsersAsync(string tenantId);
+        Task<IEnumerable<UserModel>> GetUsersAsync(string tenantId, int? skip, int? limit);
 
         Task<UserModel?> GetAsync(string tenantId, string id);
 

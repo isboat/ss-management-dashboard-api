@@ -15,14 +15,14 @@ namespace Management.Dashboard.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<HistoryModel>> GetAllByTenantIdAsync(string tenantId)
+        public async Task<IEnumerable<HistoryModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit)
         {
-            return await _repository.GetAllByTenantIdAsync(tenantId);
+            return await _repository.GetAllByTenantIdAsync(tenantId, skip, limit);
         }
 
-        public async Task<IEnumerable<HistoryModel>> GetByItemTypeAsync(string tenantId, string historyItemType)
+        public async Task<IEnumerable<HistoryModel>> GetByItemTypeAsync(string tenantId, string historyItemType, int? skip, int? limit)
         {
-            return await _repository.GetByItemTypeAsync(tenantId, historyItemType);
+            return await _repository.GetByItemTypeAsync(tenantId, historyItemType, skip, limit);
         }
 
         public async Task<IEnumerable<HistoryModel>> GetItemHistoriesAsync(string tenantId, string historyItemId)

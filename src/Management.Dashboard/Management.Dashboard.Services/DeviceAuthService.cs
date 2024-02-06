@@ -25,7 +25,7 @@ namespace Management.Dashboard.Services
             var tenant = await _tenantRepository.GetAsync(updatedModel.TenantId!);
             if (string.IsNullOrEmpty(tenant?.Id)) return DeviceAuthApprovalStatus.TenantNotFound;
 
-            var currentTvs = await _repository.GetAllByTenantIdAsync(tenant.Id);
+            var currentTvs = await _repository.GetAllByTenantIdAsync(tenant.Id, null, null);
             if (currentTvs.Count >= tenant.TvAppsLimit)
             {
                 return DeviceAuthApprovalStatus.DeviceLimitReached;
@@ -44,7 +44,7 @@ namespace Management.Dashboard.Services
 
         public async Task<IEnumerable<DeviceAuthModel>> GetApprovedDevicesAsync(string tenantId)
         {
-            var items = await _repository.GetAllByTenantIdAsync(tenantId);
+            var items = await _repository.GetAllByTenantIdAsync(tenantId, null, null);
             return items.Where(x => IsApproved(x));
         }
 

@@ -14,9 +14,9 @@ namespace Management.Dashboard.Repositories
         {
         }
 
-        public async Task<List<PlaylistModel>> GetAllByTenantIdAsync(string tenantId)
+        public async Task<List<PlaylistModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit)
         {
-            return await GetAllByTenantIdAsync<PlaylistModel>(tenantId, CollectionName);
+            return await GetAllByTenantIdAsync<PlaylistModel>(tenantId, CollectionName, skip, limit);
         }
 
         public async Task<PlaylistModel?> GetAsync(string tenantId, string id)

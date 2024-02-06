@@ -36,7 +36,7 @@ namespace Management.Dashboard.Api.Controllers
 
         [HttpGet("media-assets")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int? skip, int? limit)
         {
             var tenantId = GetRequestTenantId();
 
@@ -45,7 +45,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            var data = await _assetService.GetAllAsync(tenantId);
+            var data = await _assetService.GetAllAsync(tenantId, skip, limit);
             return data != null ? new JsonResult(data) : NotFound();
         }
 

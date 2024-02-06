@@ -21,7 +21,7 @@ namespace Management.Dashboard.Repositories
             _collection = mongoDatabase.GetCollection<DeviceAuthModel>("DeviceCodeRegistration");
         }
 
-        public async Task<List<DeviceAuthModel>> GetAllByTenantIdAsync(string tenantId)
+        public async Task<List<DeviceAuthModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit)
         {
             var items = _collection.Find(x => x.TenantId == tenantId);
             return items != null ? await items.ToListAsync() : new List<DeviceAuthModel>();

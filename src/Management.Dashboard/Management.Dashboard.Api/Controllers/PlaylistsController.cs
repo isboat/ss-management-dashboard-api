@@ -22,7 +22,7 @@ namespace Management.Dashboard.Api.Controllers
 
         [HttpGet("playlists")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int? skip, int? limit)
         {
             var tenantId = GetRequestTenantId();
 
@@ -31,7 +31,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            var data = await _playlistsService.GetAllAsync(tenantId);
+            var data = await _playlistsService.GetAllAsync(tenantId, skip, limit);
             if (data == null)
             {
                 return NotFound();

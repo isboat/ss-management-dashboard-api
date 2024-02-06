@@ -4,7 +4,7 @@ namespace Management.Dashboard.Services.Interfaces
 {
     public interface IPlaylistsService
     {
-        Task<IEnumerable<PlaylistModel>> GetAllAsync(string tenantId);
+        Task<IEnumerable<PlaylistModel>> GetAllAsync(string tenantId, int? skip, int? limit);
 
         Task<PlaylistModel?> GetAsync(string tenantId, string id);
 

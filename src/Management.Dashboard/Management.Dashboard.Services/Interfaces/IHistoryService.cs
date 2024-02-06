@@ -8,8 +8,8 @@ namespace Management.Dashboard.Services.Interfaces
 
         Task<IEnumerable<HistoryModel>> GetItemHistoriesAsync(string tenantId, string historyItemId);
 
-        Task<IEnumerable<HistoryModel>> GetAllByTenantIdAsync(string tenantId);
+        Task<IEnumerable<HistoryModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit);
 
-        Task<IEnumerable<HistoryModel>> GetByItemTypeAsync(string tenantId, string historyItemType);
+        Task<IEnumerable<HistoryModel>> GetByItemTypeAsync(string tenantId, string historyItemType, int? skip, int? limit);
     }
 }

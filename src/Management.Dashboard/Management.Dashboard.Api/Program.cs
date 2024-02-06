@@ -117,6 +117,7 @@ namespace Management.Dashboard.Api
                                   {
                                       policy.WithOrigins("http://localhost:4200",
                                                           "http://localhost:4401",
+                                                          "http://myscreensyncservice.runasp.net",
                                                           "https://wonderful-flower-0b610c010.4.azurestaticapps.net",
                                                           "https://dashboard.onscreensync.com").AllowAnyHeader().AllowAnyMethod();
                                   });

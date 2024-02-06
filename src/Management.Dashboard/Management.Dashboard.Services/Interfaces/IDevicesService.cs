@@ -4,7 +4,7 @@ namespace Management.Dashboard.Services.Interfaces
 {
     public interface IDevicesService
     {
-        Task<IEnumerable<DeviceModel>> GetDevicesAsync(string tenantId);
+        Task<IEnumerable<DeviceModel>> GetDevicesAsync(string tenantId, int? skip, int? limit);
 
         Task<DeviceModel?> GetAsync(string tenantId, string id);
 

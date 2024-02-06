@@ -6,43 +6,34 @@ using MongoDB.Driver;
 
 namespace Management.Dashboard.Repositories
 {
-    public class DeviceRepository : IRepository<DeviceModel>
+    public class DeviceRepository : BaseRepository, IRepository<DeviceModel>
     {
-        private readonly MongoClient _client;
         private readonly string CollectionName = "Devices";
 
-        public DeviceRepository(IOptions<MongoSettings> settings)
-        {
-            _client = new MongoClient(
-            settings.Value.ConnectionString);
-        }
+        public DeviceRepository(IOptions<MongoSettings> settings):base(settings) { }
 
-        private IMongoCollection<DeviceModel> GetTenantScreenCollection(string tenantId)
+        public async Task<List<DeviceModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit)
         {
-            var database = _client.GetDatabase(tenantId);
-            return database.GetCollection<DeviceModel>(CollectionName);
-        }
-
-        public async Task<List<DeviceModel>> GetAllByTenantIdAsync(string tenantId)
-        {
-            return await GetTenantScreenCollection(tenantId).Find(x => x.TenantId == tenantId).ToListAsync();
+            return await GetAllByTenantIdAsync<DeviceModel>(tenantId, CollectionName, skip, limit);
         }
 
         public async Task<DeviceModel?> GetAsync(string tenantId, string id)
         {
-            return await GetTenantScreenCollection(tenantId).Find(x => x.Id == id && x.TenantId == tenantId).FirstOrDefaultAsync();
+            return await GetAsync<DeviceModel>(tenantId, CollectionName, id);
         }
 
         public async Task CreateAsync(DeviceModel newModel)
         {
             EnsureIdNotNull(newModel);
-            await GetTenantScreenCollection(newModel.TenantId!).InsertOneAsync(newModel);
+            newModel.CreatedOn = DateTime.UtcNow;
+            await CreateAsync(newModel.TenantId!, CollectionName, newModel);
         }
 
         public async Task UpdateAsync(string id, DeviceModel updatedModel)
         {
             EnsureIdNotNull(updatedModel);
-            await GetTenantScreenCollection(updatedModel.TenantId!).ReplaceOneAsync(x => x.Id == id, updatedModel);
+            updatedModel.UpdatedOn = DateTime.UtcNow;
+            await GetTenantCollection<DeviceModel>(updatedModel.TenantId!, CollectionName).ReplaceOneAsync(x => x.Id == id, updatedModel);
         }
 
         public async Task RemoveAsync(string tenantId, string id)
@@ -50,7 +41,7 @@ namespace Management.Dashboard.Repositories
             if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
             if (string.IsNullOrEmpty(tenantId)) throw new ArgumentNullException(nameof(tenantId));
 
-            await GetTenantScreenCollection(tenantId).DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
+            await RemoveAsync<DeviceModel>(tenantId, CollectionName, id);
         }
 
         private static void EnsureIdNotNull(DeviceModel newModel)

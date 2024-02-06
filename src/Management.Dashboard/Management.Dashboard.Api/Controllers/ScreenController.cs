@@ -25,7 +25,7 @@ namespace Management.Dashboard.Api.Controllers
 
         [HttpGet("screens")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int? skip, int? limit)
         {
             var tenantId = GetRequestTenantId();
 
@@ -34,7 +34,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            var data = await _screenService.GetScreensAsync(tenantId);
+            var data = await _screenService.GetScreensAsync(tenantId, skip, limit);
             if (data == null)
             {
                 return NotFound();

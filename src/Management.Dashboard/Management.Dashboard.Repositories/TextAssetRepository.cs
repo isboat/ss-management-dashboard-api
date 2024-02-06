@@ -14,9 +14,9 @@ namespace Management.Dashboard.Repositories
         {
         }
 
-        public async Task<List<TextAssetItemModel>> GetAllByTenantIdAsync(string tenantId)
+        public async Task<List<TextAssetItemModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit)
         {
-            return await GetAllByTenantIdAsync<TextAssetItemModel>(tenantId, CollectionName);
+            return await GetAllByTenantIdAsync<TextAssetItemModel>(tenantId, CollectionName, skip, limit);
         }
 
         public async Task<TextAssetItemModel?> GetAsync(string tenantId, string id)

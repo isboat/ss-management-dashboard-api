@@ -9,7 +9,7 @@ namespace Management.Dashboard.Services.Interfaces
 {
     public interface IScreenService
     {
-        Task<IEnumerable<ScreenModel>> GetScreensAsync(string tenantId);
+        Task<IEnumerable<ScreenModel>> GetScreensAsync(string tenantId, int? skip, int? limit);
 
         Task<ScreenModel?> GetAsync(string tenantId, string id);
 

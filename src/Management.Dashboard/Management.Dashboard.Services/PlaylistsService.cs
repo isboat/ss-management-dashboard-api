@@ -27,8 +27,8 @@ namespace Management.Dashboard.Services
             await _repository.CreateAsync(newModel);
         }
 
-        public async Task<IEnumerable<PlaylistModel>> GetAllAsync(string tenantId) =>
-            await _repository.GetAllByTenantIdAsync(tenantId);
+        public async Task<IEnumerable<PlaylistModel>> GetAllAsync(string tenantId, int? skip, int? limit) =>
+            await _repository.GetAllByTenantIdAsync(tenantId, skip, limit);
 
         public async Task<PlaylistModel?> GetAsync(string tenantId, string id) =>
             await _repository.GetAsync(tenantId, id);

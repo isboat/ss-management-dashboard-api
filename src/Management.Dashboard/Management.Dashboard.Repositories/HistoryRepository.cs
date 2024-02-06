@@ -14,9 +14,9 @@ namespace Management.Dashboard.Repositories
         {
         }
 
-        public async Task<List<HistoryModel>> GetAllByTenantIdAsync(string tenantId)
+        public async Task<List<HistoryModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit)
         {
-            return await GetAllByTenantIdAsync<HistoryModel>(tenantId, CollectionName);
+            return await GetAllByTenantIdAsync<HistoryModel>(tenantId, CollectionName, skip, limit);
         }
 
         public async Task<HistoryModel?> GetAsync(string tenantId, string id) =>
@@ -41,10 +41,10 @@ namespace Management.Dashboard.Repositories
             return await collection.Find(x => x.TenantId == tenantId && x.ItemId == historyItemId).ToListAsync();
         }
 
-        public async Task<IEnumerable<HistoryModel>> GetByItemTypeAsync(string tenantId, string historyItemType)
+        public async Task<IEnumerable<HistoryModel>> GetByItemTypeAsync(string tenantId, string historyItemType, int? skip, int? limit)
         {
             var collection = GetTenantCollection<HistoryModel>(tenantId, CollectionName);
-            return await collection.Find(x => x.TenantId == tenantId && x.ItemType == historyItemType).ToListAsync();
+            return await collection.Find(x => x.TenantId == tenantId && x.ItemType == historyItemType).Skip(skip).Limit(limit).ToListAsync();
         }
 
         public Task UpdateAsync(string id, HistoryModel updatedModel)

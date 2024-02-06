@@ -21,8 +21,10 @@ namespace Management.Dashboard.Repositories
             _collection = mongoDatabase.GetCollection<UserModel>("Users");
         }
 
-        public async Task<List<UserModel>> GetAllByTenantIdAsync(string tenantId) =>
-            await _collection.Find(x => x.TenantId == tenantId).ToListAsync();
+        public async Task<List<UserModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit)
+        {
+            return await _collection.Find(x => x.TenantId == tenantId).Skip(skip).Limit(limit).ToListAsync();
+        }
 
         public async Task<List<UserModel>> GetAsync() =>
             await _collection.Find(_ => true).ToListAsync();
