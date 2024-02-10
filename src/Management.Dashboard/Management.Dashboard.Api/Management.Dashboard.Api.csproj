@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Management.Dashboard.Common\Management.Dashboard.Common.csproj" />
     <ProjectReference Include="..\Management.Dashboard.Models\Management.Dashboard.Models.csproj" />
+    <ProjectReference Include="..\Management.Dashboard.Notification\Management.Dashboard.Notification.csproj" />
     <ProjectReference Include="..\Management.Dashboard.Services\Management.Dashboard.Services.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,6 @@
 ﻿using Management.Dashboard.Common;
 using Management.Dashboard.Models;
+using Management.Dashboard.Notification;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services.Interfaces;
 
@@ -10,15 +11,18 @@ namespace Management.Dashboard.Services
         private readonly IDeviceAuthRepository<DeviceAuthModel> _repository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IBroadcastService _broadcastService;
 
         public DeviceAuthService(
-            IDeviceAuthRepository<DeviceAuthModel> repository, 
-            IDateTimeProvider dateTimeProvider, 
-            ITenantRepository tenantRepository)
+            IDeviceAuthRepository<DeviceAuthModel> repository,
+            IDateTimeProvider dateTimeProvider,
+            ITenantRepository tenantRepository,
+            IBroadcastService broadcastService)
         {
             _repository = repository;
             _dateTimeProvider = dateTimeProvider;
             _tenantRepository = tenantRepository;
+            _broadcastService = broadcastService;
         }
         public async Task<DeviceAuthApprovalStatus> ApproveAsync(DeviceAuthModel updatedModel)
         {
@@ -51,6 +55,10 @@ namespace Management.Dashboard.Services
         public async Task UpdateAsync(string id, DeviceAuthModel updatedModel)
         {
             await _repository.UpdateAsync(id, updatedModel);
+            await _broadcastService.TryBroadcastAsync(new ChangeMessage
+            {
+                DeviceId = id,
+            });
         }
 
         public async Task DeleteAsync(string tenantId, string id)

@@ -3,6 +3,7 @@ using Management.Dashboard.Models.History;
 using Management.Dashboard.Models;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services.Interfaces;
+using Management.Dashboard.Notification;
 
 namespace Management.Dashboard.Services
 {
@@ -28,7 +29,6 @@ namespace Management.Dashboard.Services
             screenData.Checksum = MD5HashGenerator.GenerateKey(screenData);
 
             var result = await _repository.PublishScreenAsync(screenData);
-
             if (result)
             {
                 string item = nameof(ScreenModel);
