@@ -8,6 +8,7 @@ using Management.Dashboard.Repositories;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services;
 using Management.Dashboard.Services.Interfaces;
+using Management.Dashboard.Services.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
@@ -75,9 +76,16 @@ namespace Management.Dashboard.Api
 
             app.UseCors(TenantAuthorization.RequiredCorsPolicy);
 
+
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<SignalRServiceHub>("/client-hub"); // Map the ChatHub to a specific endpoint
+            });
             app.UseAuthorization();
 
-            app.MapControllers();
+            //app.MapControllers();
 
             app.Run();
         }
@@ -166,6 +174,12 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 
             builder.Services.AddSingleton<IDateTimeProvider, SystemDatetimeProvider>();
+
+            var ascs = builder.Configuration.GetValue<string>("AzureSignalConnectionString");
+            if(!string.IsNullOrEmpty(ascs))
+            {
+                builder.Services.AddSignalR().AddAzureSignalR(ascs);
+            }
         }
 
         private static void RegisterJwtAuth(WebApplicationBuilder builder, ConfigurationManager configuration)

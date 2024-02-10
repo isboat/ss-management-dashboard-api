@@ -59,6 +59,17 @@ namespace Management.Dashboard.Repositories
             await _collection.ReplaceOneAsync(x => x.Id == id, existingUser);
         }
 
+        public async Task UpdatePasswordAsync(string tenantId, string id, string hashedPasswd)
+        {
+            if (string.IsNullOrWhiteSpace(hashedPasswd)) return;
+
+            var existingUser = await this.GetAsync(tenantId, id);
+            if (existingUser == null) return;
+
+            existingUser.Password = hashedPasswd;
+            await _collection.ReplaceOneAsync(x => x.Id == id, existingUser);
+        }
+
         public async Task RemoveAsync(string tenantId, string id) =>
             await _collection.DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
     }

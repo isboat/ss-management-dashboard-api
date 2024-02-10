@@ -1,6 +1,7 @@
 ﻿using Amazon.Auth.AccessControlPolicy;
 using Management.Dashboard.Common.Constants;
 using Management.Dashboard.Models;
+using Management.Dashboard.Models.ViewModels;
 using Management.Dashboard.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -84,6 +85,35 @@ namespace Management.Dashboard.Api.Controllers
 
             await _userService.UpdateAsync(model.Id!, model);
             return NoContent();
+        }
+
+        [HttpPatch("users/{id}/updatePasswd")]
+        public async Task<IActionResult> PatchPasswd(string id, [FromBody] UpdatePasswordRequest model)
+        {
+            var tenantId = GetRequestTenantId();
+            if (string.IsNullOrEmpty(tenantId) 
+                || string.IsNullOrEmpty(model?.CurrentPasswd) 
+                || string.IsNullOrEmpty(model?.NewPassword))
+            {
+                return BadRequest();
+            }
+
+            var result = await _userService.UpdatePasswordAsync(tenantId, id, model?.CurrentPasswd!, model?.NewPassword!);
+            return result.Success ? NoContent() : BadRequest(result.Error);
+        }
+
+        [HttpPatch("users/{id}/resetpasswd")]
+        public async Task<IActionResult> ResetPasswd(string id)
+        {
+            var tenantId = GetRequestTenantId();
+            if (string.IsNullOrEmpty(tenantId)
+                || string.IsNullOrEmpty(id))
+            {
+                return BadRequest();
+            }
+
+            var result = await _userService.ResetPasswordAsync(tenantId, id);
+            return result.Success ? NoContent() : BadRequest(result.Error);
         }
 
         [HttpDelete("users/{id}")]

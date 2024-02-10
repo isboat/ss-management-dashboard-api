@@ -32,5 +32,18 @@ namespace Management.Dashboard.Api.Controllers
 
             return tenantClaim.Value;
         }
+
+        [NonAction]
+        public string GetAuthorizedUserEmail()
+        {
+            var tenantClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("email", StringComparison.OrdinalIgnoreCase));
+            if (tenantClaim == null)
+            {
+                //throw new InvalidTenantException();
+                throw new Exception("email_not_found_in_claims");
+            }
+
+            return tenantClaim.Value;
+        }
     }
 }

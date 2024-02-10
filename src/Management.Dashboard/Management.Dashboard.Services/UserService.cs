@@ -1,4 +1,6 @@
 ﻿using Management.Dashboard.Models;
+using Management.Dashboard.Models.ViewModels;
+using Management.Dashboard.Repositories;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services.Interfaces;
 
@@ -53,8 +55,47 @@ namespace Management.Dashboard.Services
 
         public async Task UpdateAsync(string id, UserModel updatedModel)
         {
-            //updatedModel.Password = _encryptionService.Encrypt(updatedModel.Password!)?.Hashed;
+           // updatedModel.Password = _encryptionService.Encrypt(updatedModel.Password!)?.Hashed;
             await _repository.UpdateAsync(id, updatedModel);
+        }
+
+        public async Task<UpdatePasswordResult> UpdatePasswordAsync(string tenantId, string id, string currentPasswd, string newPasswd)
+        {
+            var result = new UpdatePasswordResult();
+
+            var dbUser = await _repository.GetAsync(tenantId, id);
+            if (string.IsNullOrEmpty(dbUser?.Password))
+            {
+                result.Error = "user_not_found";
+                return result;
+            }
+
+            var verified = _encryptionService.Verify(currentPasswd, dbUser.Password);
+            if (!verified)
+            {
+                result.Error = "current_password_authentication_failed";
+                return result;
+            };
+
+            await _repository.UpdatePasswordAsync(tenantId, id, _encryptionService.Encrypt(newPasswd!)?.Hashed!);
+            result.Success = true;
+            return result;
+        }
+
+        public async Task<UpdatePasswordResult> ResetPasswordAsync(string tenantId, string id)
+        {
+            var result = new UpdatePasswordResult();
+
+            var dbUser = await _repository.GetAsync(tenantId, id);
+            if (string.IsNullOrEmpty(dbUser?.Password))
+            {
+                result.Error = "user_not_found";
+                return result;
+            }
+
+            await _repository.UpdatePasswordAsync(tenantId, id, _encryptionService.Encrypt("Temporary!")?.Hashed!);
+            result.Success = true;
+            return result;
         }
 
         private static void AddId(IModelItem newModel)

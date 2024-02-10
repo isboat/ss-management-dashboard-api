@@ -4,5 +4,7 @@
     {
         Task<T?> GetByEmailPasswordAsync(string email, string password);
         Task<T?> GetByEmailAsync(string email);
+
+        Task UpdatePasswordAsync(string tenantId, string id, string hashedPasswd);
     }
 }
