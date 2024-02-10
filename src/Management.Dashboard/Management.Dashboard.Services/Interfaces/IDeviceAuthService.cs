@@ -8,6 +8,8 @@ namespace Management.Dashboard.Services.Interfaces
 
         Task<IEnumerable<DeviceAuthModel>> GetApprovedDevicesAsync(string tenantId);
 
+        Task<IEnumerable<DeviceAuthModel>> GetDevicesByScreenId(string screenId);
+
         Task<DeviceAuthModel?> GetAsync(string tenantId, string id);
 
         public Task CreateAsync(DeviceAuthModel newModel);

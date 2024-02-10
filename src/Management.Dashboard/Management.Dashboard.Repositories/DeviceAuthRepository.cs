@@ -32,6 +32,11 @@ namespace Management.Dashboard.Repositories
             return await _collection.Find(_ => true).ToListAsync();
         }
 
+        public async Task<List<DeviceAuthModel>> GetByFilterAsync(Func<DeviceAuthModel, bool> filterFunc)
+        {
+            return await _collection.Find(x => filterFunc(x)).ToListAsync();
+        }
+
         public async Task<DeviceAuthModel?> GetAsync(string tenantId, string id) =>
             await _collection.Find(x => x.Id == id && x.TenantId == tenantId).FirstOrDefaultAsync();
 

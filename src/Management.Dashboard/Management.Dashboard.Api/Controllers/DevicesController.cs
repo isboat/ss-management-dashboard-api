@@ -77,7 +77,7 @@ namespace Management.Dashboard.Api.Controllers
         }
 
 
-        [HttpPatch("devices/{id}/screen")]
+        [HttpPatch("devices/{id}/link-screen")]
         public async Task<ActionResult> Patch(string id, [FromBody] DeviceUpdateRequestModel model)
         {
             var tenantId = GetRequestTenantId();
@@ -92,6 +92,26 @@ namespace Management.Dashboard.Api.Controllers
                 ScreenId = model.ScreenId,
                 TenantId = tenantId
             });
+
+            return NoContent();
+        }
+
+        [HttpPatch("devices/unlink-screen/{screenId}")]
+        public async Task<ActionResult> UnlinkScreenFromDevices(string screenId)
+        {
+            var tenantId = GetRequestTenantId();
+            if (string.IsNullOrEmpty(screenId) || string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            var devices = await _devicesService.GetDevicesByScreenId(screenId);
+
+            foreach (var device in devices)
+            {
+                device.ScreenId = null;
+                await _devicesService.UpdateAsync(device.Id!, device);
+            }
 
             return NoContent();
         }

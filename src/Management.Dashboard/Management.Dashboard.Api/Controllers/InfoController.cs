@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Management.Dashboard.Notification;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Azure;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
@@ -10,8 +12,11 @@ namespace Management.Dashboard.Api.Controllers
     [ApiController]
     public class InfoController : CustomBaseController
     {
-        public InfoController()
+        private readonly IBroadcastService broadcastService;
+
+        public InfoController(IBroadcastService broadcastService)
         {
+            this.broadcastService = broadcastService;
         }
 
         [HttpGet("getaddress")]
@@ -30,6 +35,18 @@ namespace Management.Dashboard.Api.Controllers
         {
 
             return new OkObjectResult(new { success = "true" });
+        }
+
+        [HttpGet("messages")]
+        [ProducesResponseType(200)]
+        public IActionResult GetHealggth()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                this.broadcastService.TryBroadcastAsync(new ChangeMessage { DeviceId = $"device_{i}" });
+            }
+
+            return Ok();
         }
 
         private string GetLocalIPv4(NetworkInterfaceType _type)
