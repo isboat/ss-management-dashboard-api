@@ -1,6 +1,4 @@
-﻿using Management.Dashboard.Services.SignalR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
@@ -12,11 +10,8 @@ namespace Management.Dashboard.Api.Controllers
     [ApiController]
     public class InfoController : CustomBaseController
     {
-        private readonly IHubContext<SignalRServiceHub> _hubContext;
-        public InfoController(IHubContext<SignalRServiceHub> hubContext)
+        public InfoController()
         {
-            _hubContext = hubContext;
-
         }
 
         [HttpGet("getaddress")]
@@ -35,13 +30,6 @@ namespace Management.Dashboard.Api.Controllers
         {
 
             return new OkObjectResult(new { success = "true" });
-        }
-
-        [HttpGet("sendmessage")]
-        public async Task<IActionResult> SendMessage(string message)
-        {
-            //await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);
-            return Ok();
         }
 
         private string GetLocalIPv4(NetworkInterfaceType _type)
