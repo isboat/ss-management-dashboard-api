@@ -5,6 +5,7 @@ using Management.Dashboard.Repositories;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services;
 using Management.Dashboard.Services.Interfaces;
+using Microsoft.Azure.SignalR.Management;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 
@@ -67,8 +68,16 @@ namespace Management.Dashboard.Api
 
                 var messagingBus = sp.GetService<IMessagingBusService>();
                 var queueClientFactory = sp.GetService<IQueueClientFactory>();
+                var messagePublisher = sp.GetService<IMessagePublisher>();
 
-                return new BroadcastService(serviceBusConnectionString!, queueName!, messagingBus!, queueClientFactory!);
+                return new BroadcastService(serviceBusConnectionString!, queueName!, messagingBus!, queueClientFactory!, messagePublisher!);
+            });
+
+            builder.Services.AddSingleton<IMessagePublisher, MessagePublisher>(sp =>
+            {
+                var serviceBusConnectionString = builder.Configuration.GetValue<string>("AzureSignalRConnectionString");
+
+                return new MessagePublisher(serviceBusConnectionString!, ServiceTransportType.Transient);
             });
         }
     }
