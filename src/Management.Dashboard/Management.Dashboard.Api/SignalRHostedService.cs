@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.SignalR.Management;
+﻿using Management.Dashboard.Notification;
+using Microsoft.Azure.SignalR.Management;
 
 namespace Management.Dashboard.Api
 {
@@ -10,7 +11,6 @@ namespace Management.Dashboard.Api
 
     public class SignalRHostedService : IHostedService, IHubContextStore
     {
-        private const string ChangeListenerHub = "changelistenerhub";
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
 
@@ -26,12 +26,13 @@ namespace Management.Dashboard.Api
         {
             using var serviceManager = new ServiceManagerBuilder()
                 .WithOptions(o=> {
-                    o.ConnectionString = _configuration["AzureSignalRConnectionString"];
+                    o.ConnectionString = _configuration[NotificationConstants.AzureSignalRConnectionStringName];
                     o.ServiceTransportType = ServiceTransportType.Transient; 
                 })
                 .WithLoggerFactory(_loggerFactory)
                 .BuildServiceManager();
-            MessageHubContext = await serviceManager.CreateHubContextAsync(ChangeListenerHub, cancellationToken);
+
+            MessageHubContext = await serviceManager.CreateHubContextAsync(NotificationConstants.HubName, cancellationToken);
         }
 
         Task IHostedService.StopAsync(CancellationToken cancellationToken)

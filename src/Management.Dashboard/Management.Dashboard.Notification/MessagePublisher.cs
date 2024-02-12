@@ -5,8 +5,6 @@ namespace Management.Dashboard.Notification
 {
     public class MessagePublisher: IMessagePublisher
     {
-        private const string ClientSideTargetEvent = "ReceiveChangeMessage";
-        private const string HubName = "changelistenerhub";
         private readonly string _connectionString;
         private readonly ServiceTransportType _serviceTransportType;
         private ServiceHubContext _hubContext;
@@ -30,21 +28,7 @@ namespace Management.Dashboard.Notification
             //.WithLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
             .BuildServiceManager();
 
-            _hubContext = await serviceManager.CreateHubContextAsync(HubName, default);
-        }
-
-        public Task ManageUserGroup(string command, string userId, string groupName)
-        {
-            switch (command)
-            {
-                case "add":
-                    return _hubContext.UserGroups.AddToGroupAsync(userId, groupName);
-                case "remove":
-                    return _hubContext.UserGroups.RemoveFromGroupAsync(userId, groupName);
-                default:
-                    Console.WriteLine($"Can't recognize command {command}");
-                    return Task.CompletedTask;
-            }
+            _hubContext = await serviceManager.CreateHubContextAsync(NotificationConstants.HubName, default);
         }
 
         public Task SendMessages(string command, string receiver, string message)
@@ -52,19 +36,19 @@ namespace Management.Dashboard.Notification
             switch (command)
             {
                 case "broadcast":
-                    return _hubContext.Clients.All.SendAsync(ClientSideTargetEvent, message);
+                    return _hubContext.Clients.All.SendAsync(NotificationConstants.ClientSideTargetEvent, message);
                 case "user":
                     var userId = receiver;
-                    return _hubContext.Clients.User(userId).SendAsync(ClientSideTargetEvent, message);
+                    return _hubContext.Clients.User(userId).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
                 case "users":
                     var userIds = receiver.Split(',');
-                    return _hubContext.Clients.Users(userIds).SendAsync(ClientSideTargetEvent, message);
+                    return _hubContext.Clients.Users(userIds).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
                 case "group":
                     var groupName = receiver;
-                    return _hubContext.Clients.Group(groupName).SendAsync(ClientSideTargetEvent, message);
+                    return _hubContext.Clients.Group(groupName).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
                 case "groups":
                     var groupNames = receiver.Split(',');
-                    return _hubContext.Clients.Groups(groupNames).SendAsync(ClientSideTargetEvent, message);
+                    return _hubContext.Clients.Groups(groupNames).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
                 default:
                     Console.WriteLine($"Can't recognize command {command}");
                     return Task.CompletedTask;
@@ -76,16 +60,21 @@ namespace Management.Dashboard.Notification
             var message = "published";
 
             if (!string.IsNullOrEmpty(changeMessage.DeviceId))
-            {
-                _hubContext.Clients.User(changeMessage.DeviceId).SendAsync(ClientSideTargetEvent, message);
+            {                                
+                var userId = NotificationExtensions.ToSignalRUserId(changeMessage.DeviceId);
+                _hubContext.Clients.User(userId).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
             }
 
             if (!string.IsNullOrEmpty(changeMessage.TenantId))
             {
-                _hubContext.Clients.Group($"Grp-{changeMessage.TenantId}").SendAsync(ClientSideTargetEvent, message);
+                var grpName = NotificationExtensions.ToGroupName(changeMessage.TenantId);
+                _hubContext.Clients.Group(grpName).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
             }
 
-            _hubContext.Clients.All.SendAsync(ClientSideTargetEvent, message);
+            if(string.IsNullOrEmpty(changeMessage.TenantId) && string.IsNullOrEmpty(changeMessage.DeviceId))
+            { 
+                _hubContext.Clients.All.SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+            }
 
             return Task.CompletedTask;
         }

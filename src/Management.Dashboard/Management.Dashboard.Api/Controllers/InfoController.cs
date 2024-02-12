@@ -41,9 +41,9 @@ namespace Management.Dashboard.Api.Controllers
         [ProducesResponseType(200)]
         public IActionResult GetHealggth()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1; i++)
             {
-                this.broadcastService.TryBroadcastAsync(new ChangeMessage { DeviceId = $"device_{i}" });
+                //this.broadcastService.TryBroadcastAsync(new ChangeMessage { DeviceId = "ddd", TenantId = "tenantid" });
             }
 
             return Ok();

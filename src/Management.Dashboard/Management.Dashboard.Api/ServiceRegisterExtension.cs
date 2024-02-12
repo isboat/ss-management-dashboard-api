@@ -75,7 +75,7 @@ namespace Management.Dashboard.Api
 
             builder.Services.AddSingleton<IMessagePublisher, MessagePublisher>(sp =>
             {
-                var serviceBusConnectionString = builder.Configuration.GetValue<string>("AzureSignalRConnectionString");
+                var serviceBusConnectionString = builder.Configuration.GetValue<string>(NotificationConstants.AzureSignalRConnectionStringName);
 
                 return new MessagePublisher(serviceBusConnectionString!, ServiceTransportType.Transient);
             });
