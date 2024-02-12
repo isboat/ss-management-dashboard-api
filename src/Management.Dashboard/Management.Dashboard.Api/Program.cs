@@ -38,11 +38,6 @@ namespace Management.Dashboard.Api
 
             builder.Services.AddControllers();
 
-            builder.Services
-                .AddSingleton<SignalRHostedService>()
-                .AddHostedService(sp => sp.GetService<SignalRHostedService>())
-                .AddSingleton<IHubContextStore>(sp => sp.GetService<SignalRHostedService>());
-
             builder.Services.AddEndpointsApiExplorer();
             //builder.Services.AddSwaggerGen();
             builder.Services.AddSwaggerGen(c =>
