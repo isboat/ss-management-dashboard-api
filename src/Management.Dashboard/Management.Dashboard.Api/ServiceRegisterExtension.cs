@@ -59,19 +59,7 @@ namespace Management.Dashboard.Api
         
         public static void RegisterNotiicationServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddSingleton<IMessagingBusService, MessagingBusService>();
-            builder.Services.AddSingleton<IQueueClientFactory, QueueClientFactory>(); 
-            builder.Services.AddSingleton<IBroadcastService, BroadcastService>(sp =>
-            {
-                var serviceBusConnectionString = builder.Configuration.GetValue<string>("ServiceBusConnectionString");
-                var queueName = builder.Configuration.GetValue<string>("ServiceBusQueueName");
-
-                var messagingBus = sp.GetService<IMessagingBusService>();
-                var queueClientFactory = sp.GetService<IQueueClientFactory>();
-                var messagePublisher = sp.GetService<IMessagePublisher>();
-
-                return new BroadcastService(serviceBusConnectionString!, queueName!, messagingBus!, queueClientFactory!, messagePublisher!);
-            });
+            builder.Services.AddSingleton<IBroadcastService, BroadcastService>();
 
             builder.Services.AddSingleton<IMessagePublisher, MessagePublisher>(sp =>
             {

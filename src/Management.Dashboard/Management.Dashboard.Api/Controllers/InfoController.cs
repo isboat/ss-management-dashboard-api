@@ -39,11 +39,11 @@ namespace Management.Dashboard.Api.Controllers
 
         [HttpGet("messages")]
         [ProducesResponseType(200)]
-        public IActionResult GetHealggth()
+        public IActionResult SignalRMessageTest()
         {
             for (int i = 0; i < 1; i++)
             {
-                //this.broadcastService.TryBroadcastAsync(new ChangeMessage { DeviceId = "ddd", TenantId = "tenantid" });
+                this.broadcastService.TryBroadcastAsync(new ChangeMessage { DeviceId = "ddd", TenantId = "tenantid" });
             }
 
             return Ok();
