@@ -39,13 +39,25 @@ namespace Management.Dashboard.Api.Controllers
 
         [HttpGet("messages")]
         [ProducesResponseType(200)]
-        public IActionResult SignalRMessageTest()
+        public IActionResult SignalRMessageTest(string info, string mType)
         {
-            for (int i = 0; i < 1; i++)
+            if (string.IsNullOrEmpty(info))
             {
-                this.broadcastService.TryBroadcastAsync(new ChangeMessage { DeviceId = "ddd", TenantId = "tenantid" });
+                this.broadcastService.TryBroadcastAsync(new ChangeMessage 
+                { 
+                    MessageType = "content.published", 
+                    DeviceId = "61ac1c5dc5d64c57ac8fdc50d1ea2f32", 
+                    TenantId = "onscreensync_testing_ltd_tenant" 
+                });
             }
-
+            else
+            {
+                this.broadcastService.TryBroadcastAsync(new ChangeMessage
+                {
+                    MessageType = mType,
+                    MessageData = info
+                });
+            }
             return Ok();
         }
 

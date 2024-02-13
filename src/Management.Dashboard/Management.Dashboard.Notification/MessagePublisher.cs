@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.SignalR.Management;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Management.Dashboard.Notification
 {
@@ -57,7 +59,10 @@ namespace Management.Dashboard.Notification
 
         public Task SendMessage(ChangeMessage changeMessage)
         {
-            var message = "published";
+            var message = JsonConvert.SerializeObject(changeMessage, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
 
             if (!string.IsNullOrEmpty(changeMessage.DeviceId))
             {                                
