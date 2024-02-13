@@ -11,18 +11,18 @@ namespace Management.Dashboard.Services
         private readonly IDeviceAuthRepository<DeviceAuthModel> _repository;
         private readonly ITenantRepository _tenantRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IBroadcastService _broadcastService;
+        private readonly IMessagePublisher _messagePublisher;
 
         public DeviceAuthService(
             IDeviceAuthRepository<DeviceAuthModel> repository,
             IDateTimeProvider dateTimeProvider,
             ITenantRepository tenantRepository,
-            IBroadcastService broadcastService)
+            IMessagePublisher messagePublisher)
         {
             _repository = repository;
             _dateTimeProvider = dateTimeProvider;
             _tenantRepository = tenantRepository;
-            _broadcastService = broadcastService;
+            _messagePublisher = messagePublisher;
         }
         public async Task<DeviceAuthApprovalStatus> ApproveAsync(DeviceAuthModel updatedModel)
         {
@@ -61,9 +61,11 @@ namespace Management.Dashboard.Services
         public async Task UpdateAsync(string id, DeviceAuthModel updatedModel)
         {
             await _repository.UpdateAsync(id, updatedModel);
-            await _broadcastService.TryBroadcastAsync(new ChangeMessage
+            await _messagePublisher.SendMessage(new ChangeMessage
             {
                 DeviceId = id,
+                TenantId = updatedModel.TenantId,
+                MessageType = MessageTypes.ContentPublished
             });
         }
 

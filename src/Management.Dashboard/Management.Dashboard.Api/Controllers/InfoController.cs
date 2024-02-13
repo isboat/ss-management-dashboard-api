@@ -12,9 +12,9 @@ namespace Management.Dashboard.Api.Controllers
     [ApiController]
     public class InfoController : CustomBaseController
     {
-        private readonly IBroadcastService broadcastService;
+        private readonly IMessagePublisher broadcastService;
 
-        public InfoController(IBroadcastService broadcastService)
+        public InfoController(IMessagePublisher broadcastService)
         {
             this.broadcastService = broadcastService;
         }
@@ -43,16 +43,16 @@ namespace Management.Dashboard.Api.Controllers
         {
             if (string.IsNullOrEmpty(info))
             {
-                this.broadcastService.TryBroadcastAsync(new ChangeMessage 
+                this.broadcastService.SendMessage(new ChangeMessage 
                 { 
-                    MessageType = "content.published", 
+                    MessageType = MessageTypes.ContentPublished, 
                     DeviceId = "61ac1c5dc5d64c57ac8fdc50d1ea2f32", 
                     TenantId = "onscreensync_testing_ltd_tenant" 
                 });
             }
             else
             {
-                this.broadcastService.TryBroadcastAsync(new ChangeMessage
+                this.broadcastService.SendMessage(new ChangeMessage
                 {
                     MessageType = mType,
                     MessageData = info
