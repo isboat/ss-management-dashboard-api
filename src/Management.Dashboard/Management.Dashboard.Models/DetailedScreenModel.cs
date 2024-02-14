@@ -22,6 +22,7 @@ namespace Management.Dashboard.Models
                 MediaAssetEntityId = screen.MediaAssetEntityId,
                 ExternalMediaSource = screen.ExternalMediaSource,
                 TextEditorData = screen.TextEditorData,
+                TextAssetEntityId = screen.TextAssetEntityId,
                 Layout = screen.Layout,
                 PlaylistId = screen.PlaylistId,
             };

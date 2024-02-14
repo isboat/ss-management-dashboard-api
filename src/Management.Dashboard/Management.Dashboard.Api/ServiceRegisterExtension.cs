@@ -59,8 +59,6 @@ namespace Management.Dashboard.Api
         
         public static void RegisterNotiicationServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddSingleton<IBroadcastService, BroadcastService>();
-
             builder.Services.AddSingleton<IMessagePublisher, MessagePublisher>(sp =>
             {
                 var serviceBusConnectionString = builder.Configuration.GetValue<string>(NotificationConstants.AzureSignalRConnectionStringName);

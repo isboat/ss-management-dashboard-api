@@ -45,7 +45,7 @@ namespace Management.Dashboard.Api.Controllers
             {
                 this.broadcastService.SendMessage(new ChangeMessage 
                 { 
-                    MessageType = MessageTypes.ContentPublished, 
+                    MessageType = MessageTypes.ContentPublish, 
                     DeviceId = "61ac1c5dc5d64c57ac8fdc50d1ea2f32", 
                     TenantId = "onscreensync_testing_ltd_tenant" 
                 });

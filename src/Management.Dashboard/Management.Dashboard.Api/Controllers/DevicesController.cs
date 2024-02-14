@@ -1,6 +1,7 @@
 ﻿using Amazon.Auth.AccessControlPolicy;
 using Management.Dashboard.Common.Constants;
 using Management.Dashboard.Models;
+using Management.Dashboard.Notification;
 using Management.Dashboard.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,12 @@ namespace Management.Dashboard.Api.Controllers
     public class DevicesController : CustomBaseController
     {
         private readonly IDeviceAuthService _devicesService;
+        private readonly IMessagePublisher _messagePublisher;
 
-        public DevicesController(IDeviceAuthService devicesService)
+        public DevicesController(IDeviceAuthService devicesService, IMessagePublisher messagePublisher)
         {
             _devicesService = devicesService;
+            _messagePublisher = messagePublisher;
         }
 
         [HttpGet("devices")]
@@ -73,6 +76,13 @@ namespace Management.Dashboard.Api.Controllers
                 TenantId = tenantId
             });
 
+            await _messagePublisher.SendMessage(new ChangeMessage
+            {
+                DeviceId = id,
+                TenantId = tenantId,
+                MessageType = MessageTypes.DeviceInfoUpdate
+            });
+
             return NoContent();
         }
 
@@ -93,6 +103,13 @@ namespace Management.Dashboard.Api.Controllers
                 TenantId = tenantId
             });
 
+            await _messagePublisher.SendMessage(new ChangeMessage
+            {
+                DeviceId = id,
+                TenantId = tenantId,
+                MessageType = MessageTypes.ContentPublish
+            });
+
             return NoContent();
         }
 
@@ -111,6 +128,12 @@ namespace Management.Dashboard.Api.Controllers
             {
                 device.ScreenId = null;
                 await _devicesService.UpdateAsync(device.Id!, device);
+                await _messagePublisher.SendMessage(new ChangeMessage
+                {
+                    DeviceId = device.Id!,
+                    TenantId = tenantId,
+                    MessageType = MessageTypes.ContentPublish
+                });
             }
 
             return NoContent();
@@ -127,7 +150,13 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            await _devicesService.DeleteAsync(tenantId, id);
+            await _devicesService.DeleteAsync(tenantId, id); 
+            await _messagePublisher.SendMessage(new ChangeMessage
+            {
+                DeviceId = id,
+                TenantId = tenantId,
+                MessageType = MessageTypes.DeviceInfoUpdate
+            });
             return Ok();
         }
     }
