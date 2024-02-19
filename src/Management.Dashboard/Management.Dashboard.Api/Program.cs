@@ -15,6 +15,9 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using Serilog;
+using Serilog.Debugging;
+using Serilog.Sinks.Grafana.Loki;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -27,11 +30,30 @@ namespace Management.Dashboard.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //Creating the Logger with Minimum Settings
+            var logger = new LoggerConfiguration()
+                                .ReadFrom.Configuration(builder.Configuration)
+                                .Enrich.FromLogContext()
+                                .CreateLogger();
+
+            builder.Logging.ClearProviders();
+            builder.Logging.AddSerilog(logger);
+            SelfLog.Enable(Console.Error);
+
             builder.Services.Configure<MongoSettings>(
                 builder.Configuration.GetSection("MongoSettings"));
 
+            builder.Services.Configure<S3Settings>(
+                builder.Configuration.GetSection("S3Settings"));
+
+            builder.Services.Configure<StabilityAiSettings>(
+                builder.Configuration.GetSection("StabilityAiSettings"));
+
             builder.Services.Configure<JwtSettings>(
                 builder.Configuration.GetSection("JwtSettings"));
+
+            //builder.Services.AddSerilog();// .AddSerilog();
+            //builder.Services.AddSingleton(Log.Logger);
 
             builder.RegisterServices();
             builder.RegisterNotiicationServices();
@@ -61,6 +83,7 @@ namespace Management.Dashboard.Api
             RegisterJwtAuth(builder, builder.Configuration);
 
             var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

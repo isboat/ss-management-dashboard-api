@@ -1,6 +1,5 @@
 ﻿using Management.Dashboard.Notification;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Azure;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
@@ -13,10 +12,12 @@ namespace Management.Dashboard.Api.Controllers
     public class InfoController : CustomBaseController
     {
         private readonly IMessagePublisher broadcastService;
+        private readonly ILogger<InfoController> _logger;
 
-        public InfoController(IMessagePublisher broadcastService)
+        public InfoController(IMessagePublisher broadcastService, ILogger<InfoController> logger)
         {
             this.broadcastService = broadcastService;
+            this._logger = logger;
         }
 
         [HttpGet("getaddress")]
@@ -33,7 +34,7 @@ namespace Management.Dashboard.Api.Controllers
         [ProducesResponseType(200)]
         public IActionResult GetHealth()
         {
-
+            _logger.LogError("some error message");
             return new OkObjectResult(new { success = "true" });
         }
 
