@@ -49,9 +49,9 @@ namespace Management.Dashboard.Services
             return items.Where(x => IsApproved(x));
         }
 
-        public async Task<IEnumerable<DeviceAuthModel>> GetDevicesByScreenId(string screenId)
+        public async Task<IEnumerable<DeviceAuthModel>> GetDevicesByScreenId(string tenantId, string screenId)
         {
-            var items = await _repository.GetByFilterAsync((x) => x.ScreenId == screenId);
+            var items = await _repository.GetByScreenIdAsync(tenantId, screenId);
             return items.Where(x => IsApproved(x));
         }
 

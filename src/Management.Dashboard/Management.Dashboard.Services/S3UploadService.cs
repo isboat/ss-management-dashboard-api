@@ -5,6 +5,7 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Management.Dashboard.Models.Settings;
 using Management.Dashboard.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Management.Dashboard.Services
@@ -14,13 +15,15 @@ namespace Management.Dashboard.Services
         private readonly string? _bucketName;
         private readonly string? _accessKey;
         private readonly string? _secretKey;
+        private readonly ILogger<S3UploadService> _logger;
 
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.EUWest2;
-        public S3UploadService(IOptions<S3Settings> settings)
+        public S3UploadService(IOptions<S3Settings> settings, ILogger<S3UploadService> logger)
         {
             _bucketName = settings.Value.BucketName;
             _accessKey = settings.Value.AccessKey;
             _secretKey = settings.Value.SecretKey;
+            _logger = logger;
 
         }
 
@@ -46,13 +49,13 @@ namespace Management.Dashboard.Services
             }
             catch (AmazonS3Exception e)
             {
-                Console.WriteLine(
+                _logger.LogError(
                         "Error encountered ***. Message:'{0}' when writing an object"
                         , e.Message);
             }
             catch (Exception e)
             {
-                Console.WriteLine(
+                _logger.LogError(
                     "Unknown encountered on server. Message:'{0}' when writing an object"
                     , e.Message);
             }
@@ -77,13 +80,13 @@ namespace Management.Dashboard.Services
             }
             catch (AmazonS3Exception e)
             {
-                Console.WriteLine(
+                _logger.LogError(
                         "Error encountered ***. Message:'{0}' when writing an object"
                         , e.Message);
             }
             catch (Exception e)
             {
-                Console.WriteLine(
+                _logger.LogError(
                     "Unknown encountered on server. Message:'{0}' when writing an object"
                     , e.Message);
             }

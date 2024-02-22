@@ -59,11 +59,12 @@ namespace Management.Dashboard.Api
         
         public static void RegisterNotiicationServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddSingleton<IMessagePublisher, MessagePublisher>(sp =>
+            builder.Services.AddScoped<IMessagePublisher, MessagePublisher>(sp =>
             {
                 var serviceBusConnectionString = builder.Configuration.GetValue<string>(NotificationConstants.AzureSignalRConnectionStringName);
+                var logger = sp.GetService<ILogger<MessagePublisher>>();
 
-                return new MessagePublisher(serviceBusConnectionString!, ServiceTransportType.Transient);
+                return new MessagePublisher(serviceBusConnectionString!, ServiceTransportType.Transient, logger);
             });
         }
     }

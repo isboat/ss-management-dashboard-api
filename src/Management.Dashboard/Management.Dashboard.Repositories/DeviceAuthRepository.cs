@@ -37,6 +37,11 @@ namespace Management.Dashboard.Repositories
             return await _collection.Find(x => filterFunc(x)).ToListAsync();
         }
 
+        public async Task<List<DeviceAuthModel>> GetByScreenIdAsync(string tenantId, string screenId)
+        {
+            return await _collection.Find(x => x.ScreenId == screenId && x.TenantId == tenantId).ToListAsync();
+        }
+
         public async Task<DeviceAuthModel?> GetAsync(string tenantId, string id) =>
             await _collection.Find(x => x.Id == id && x.TenantId == tenantId).FirstOrDefaultAsync();
 
@@ -56,8 +61,7 @@ namespace Management.Dashboard.Repositories
             if (!string.IsNullOrEmpty(updateModel?.DeviceName))
                 existingUser.DeviceName = updateModel?.DeviceName;
 
-            if (!string.IsNullOrEmpty(updateModel?.ScreenId))
-                existingUser.ScreenId = updateModel?.ScreenId;
+            existingUser.ScreenId = updateModel?.ScreenId;
 
             await _collection.ReplaceOneAsync(x => x.Id == id, existingUser);
         }

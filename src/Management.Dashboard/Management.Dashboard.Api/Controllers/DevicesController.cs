@@ -122,7 +122,7 @@ namespace Management.Dashboard.Api.Controllers
                 return BadRequest();
             }
 
-            var devices = await _devicesService.GetDevicesByScreenId(screenId);
+            var devices = await _devicesService.GetDevicesByScreenId(tenantId, screenId);
 
             foreach (var device in devices)
             {

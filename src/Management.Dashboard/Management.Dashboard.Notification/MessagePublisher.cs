@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.SignalR.Management;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -10,11 +11,13 @@ namespace Management.Dashboard.Notification
         private readonly string _connectionString;
         private readonly ServiceTransportType _serviceTransportType;
         private ServiceHubContext _hubContext;
+        private readonly ILogger<MessagePublisher> _logger;
 
-        public MessagePublisher(string connectionString, ServiceTransportType serviceTransportType)
+        public MessagePublisher(string connectionString, ServiceTransportType serviceTransportType, ILogger<MessagePublisher> logger)
         {
             _connectionString = connectionString;
             _serviceTransportType = serviceTransportType;
+            _logger = logger;
 
             _ = InitAsync();
         }
@@ -35,50 +38,67 @@ namespace Management.Dashboard.Notification
 
         public Task SendMessages(string command, string receiver, string message)
         {
-            switch (command)
+            try
             {
-                case "broadcast":
-                    return _hubContext.Clients.All.SendAsync(NotificationConstants.ClientSideTargetEvent, message);
-                case "user":
-                    var userId = receiver;
-                    return _hubContext.Clients.User(userId).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
-                case "users":
-                    var userIds = receiver.Split(',');
-                    return _hubContext.Clients.Users(userIds).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
-                case "group":
-                    var groupName = receiver;
-                    return _hubContext.Clients.Group(groupName).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
-                case "groups":
-                    var groupNames = receiver.Split(',');
-                    return _hubContext.Clients.Groups(groupNames).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
-                default:
-                    Console.WriteLine($"Can't recognize command {command}");
-                    return Task.CompletedTask;
+                switch (command)
+                {
+                    case "broadcast":
+                        return _hubContext.Clients.All.SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                    case "user":
+                        var userId = receiver;
+                        return _hubContext.Clients.User(userId).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                    case "users":
+                        var userIds = receiver.Split(',');
+                        return _hubContext.Clients.Users(userIds).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                    case "group":
+                        var groupName = receiver;
+                        return _hubContext.Clients.Group(groupName).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                    case "groups":
+                        var groupNames = receiver.Split(',');
+                        return _hubContext.Clients.Groups(groupNames).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                    default:
+                        Console.WriteLine($"Can't recognize command {command}");
+                        break;
+                }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred");
+            }
+            return Task.CompletedTask;
         }
 
         public Task SendMessage(ChangeMessage changeMessage)
         {
-            var message = JsonConvert.SerializeObject(changeMessage, new JsonSerializerSettings
+            try
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
+                var message = JsonConvert.SerializeObject(changeMessage, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                });
 
-            if (!string.IsNullOrEmpty(changeMessage.DeviceId))
-            {                                
-                var userId = NotificationExtensions.ToSignalRUserId(changeMessage.DeviceId);
-                _hubContext.Clients.User(userId).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                _logger.LogWarning(message);
+
+                if (!string.IsNullOrEmpty(changeMessage.DeviceId))
+                {
+                    var userId = NotificationExtensions.ToSignalRUserId(changeMessage.DeviceId);
+                    _hubContext.Clients.User(userId).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                }
+
+                if (!string.IsNullOrEmpty(changeMessage.TenantId))
+                {
+                    var grpName = NotificationExtensions.ToGroupName(changeMessage.TenantId);
+                    _hubContext.Clients.Group(grpName).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                }
+
+                if (string.IsNullOrEmpty(changeMessage.TenantId) && string.IsNullOrEmpty(changeMessage.DeviceId))
+                {
+                    _hubContext.Clients.All.SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                }
             }
-
-            if (!string.IsNullOrEmpty(changeMessage.TenantId))
+            catch (Exception ex)
             {
-                var grpName = NotificationExtensions.ToGroupName(changeMessage.TenantId);
-                _hubContext.Clients.Group(grpName).SendAsync(NotificationConstants.ClientSideTargetEvent, message);
-            }
-
-            if(string.IsNullOrEmpty(changeMessage.TenantId) && string.IsNullOrEmpty(changeMessage.DeviceId))
-            { 
-                _hubContext.Clients.All.SendAsync(NotificationConstants.ClientSideTargetEvent, message);
+                _logger.LogError(ex, "Error occurred");
             }
 
             return Task.CompletedTask;

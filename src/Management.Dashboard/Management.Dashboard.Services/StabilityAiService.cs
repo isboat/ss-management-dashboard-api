@@ -4,15 +4,19 @@ using Management.Dashboard.Exceptions;
 using System.Text;
 using Management.Dashboard.Models.Settings;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Management.Dashboard.Services
 {
     public class StabilityAiService : IAiService
     {
         private readonly StabilityAiSettings _settings;
-        public StabilityAiService(IOptions<StabilityAiSettings> settings)
+        private readonly ILogger<StabilityAiService> _logger;
+
+        public StabilityAiService(IOptions<StabilityAiSettings> settings, ILogger<StabilityAiService> logger)
         {
             _settings = settings.Value;
+            _logger = logger;
         }
 
         public async Task<string?> GenerateAsync(string inputText, string tenantId)
@@ -35,42 +39,50 @@ namespace Management.Dashboard.Services
 
         private async Task<string?> ExecuteImagePrompt(string prompt)
         {
-            using HttpClient client = new();
-            using var req = new HttpRequestMessage(HttpMethod.Post, _settings.ApiUrl);
+            try
+            {
 
-            var imageRequest = new ImageRequest 
-            { 
-                TextPrompts = new List<ImageTextPrompt>
-                { 
+                using HttpClient client = new();
+                using var req = new HttpRequestMessage(HttpMethod.Post, _settings.ApiUrl);
+
+                var imageRequest = new ImageRequest
+                {
+                    TextPrompts = new List<ImageTextPrompt>
+                {
                     new() { Text = prompt }
                 }
-            };
+                };
 
-            req.Headers.Add("Authorization", $"Bearer {_settings.Apikey}");
-            req.Headers.Add("Accept", "application/json");
+                req.Headers.Add("Authorization", $"Bearer {_settings.Apikey}");
+                req.Headers.Add("Accept", "application/json");
 
-            var reqContent = JsonConvert.SerializeObject(imageRequest);
-            req.Content = new StringContent(reqContent, Encoding.UTF8, "application/json");
+                var reqContent = JsonConvert.SerializeObject(imageRequest);
+                req.Content = new StringContent(reqContent, Encoding.UTF8, "application/json");
 
-            using HttpResponseMessage? response = await client.SendAsync(req);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var responseString = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(responseString))
+                using HttpResponseMessage? response = await client.SendAsync(req);
+                if (response != null && response.IsSuccessStatusCode)
                 {
-                    var imageResponse = JsonConvert.DeserializeObject<ImageResponse>(responseString);
-                    
-                    if (imageResponse?.Artifacts == null || !imageResponse.Artifacts.Any()) throw new AiImageGenerationException("AI image response is null");
-                    var artifact = imageResponse.Artifacts.FirstOrDefault() ?? throw new AiImageGenerationException("AI image response is null");
-                    
-                    var dataByte = Convert.FromBase64String(artifact.Base64!);
-                    
-                    return await DownloadImageAsync("images", "imageFile", dataByte);
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(responseString))
+                    {
+                        var imageResponse = JsonConvert.DeserializeObject<ImageResponse>(responseString);
+
+                        if (imageResponse?.Artifacts == null || !imageResponse.Artifacts.Any()) throw new AiImageGenerationException("AI image response is null");
+                        var artifact = imageResponse.Artifacts.FirstOrDefault() ?? throw new AiImageGenerationException("AI image response is null");
+
+                        var dataByte = Convert.FromBase64String(artifact.Base64!);
+
+                        return await DownloadImageAsync("images", "imageFile", dataByte);
+                    }
+                }
+                else
+                {
+                    _logger.LogError("Response is not successful. {Response}", JsonConvert.SerializeObject(response));
                 }
             }
-            else
+            catch (Exception ex)
             {
-                //var dd = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Error occurred {ex}", ex);
             }
 
             return null;
