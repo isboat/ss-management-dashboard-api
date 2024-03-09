@@ -2,7 +2,6 @@
 using Management.Dashboard.Models.History;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services.Interfaces;
-using Microsoft.Extensions.Options;
 
 namespace Management.Dashboard.Services
 {

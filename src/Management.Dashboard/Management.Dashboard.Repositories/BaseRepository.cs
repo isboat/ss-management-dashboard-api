@@ -23,8 +23,12 @@ namespace Management.Dashboard.Repositories
 
         protected async Task<List<T>> GetAllByTenantIdAsync<T>(string tenantId, string collectionName, int? skip, int? limit) where T: IModelItem
         {
+            var builder = Builders<T>.Filter;
+            var filter = builder.Empty;
+            if(!string.IsNullOrEmpty(tenantId)) filter = builder.And(builder.Eq(r => r.TenantId, tenantId));
+
             return await GetTenantCollection<T>(tenantId, collectionName)
-                .Find(x => x.TenantId == tenantId).Skip(skip).Limit(limit).ToListAsync();
+                .Find(filter).SortByDescending(x => x.UpdatedOn).ThenByDescending(x => x.CreatedOn).ThenByDescending(x => x.Id).Skip(skip).Limit(limit).ToListAsync();
         }
 
         protected async Task<List<T>> GetAsync<T>(string tenantId, string collectionName)
@@ -32,9 +36,17 @@ namespace Management.Dashboard.Repositories
             return await GetTenantCollection<T>(tenantId, collectionName).Find(_ => true).ToListAsync();
         }
 
-        protected async Task<T?> GetAsync<T>(string tenantId, string collectionName, string id) where T : IModelItem =>
-            await GetTenantCollection<T>(tenantId, collectionName).Find(x => x.Id == id && x.TenantId == tenantId).FirstOrDefaultAsync();
+        protected async Task<T?> GetAsync<T>(string tenantId, string collectionName, string id) where T : IModelItem
+        {
+            var collection = GetTenantCollection<T>(tenantId, collectionName);
 
+            var builder = Builders<T>.Filter;
+            var filter = builder.Empty;
+            if (!string.IsNullOrEmpty(tenantId)) filter = builder.And(builder.Eq(r => r.TenantId, tenantId));
+            if (!string.IsNullOrEmpty(id)) filter = builder.And(builder.Eq(r => r.Id, id));
+
+            return await collection.Find(filter).FirstOrDefaultAsync();
+        }
 
         protected async Task CreateAsync<T>(string tenantId, string collectionName, T newTenant) where T : IModelItem =>
             await GetTenantCollection<T>(tenantId, collectionName).InsertOneAsync(newTenant);

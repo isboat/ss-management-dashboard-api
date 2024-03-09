@@ -3,6 +3,7 @@ using Management.Dashboard.Models.ViewModels;
 using Management.Dashboard.Repositories;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services.Interfaces;
+using System.Text;
 
 namespace Management.Dashboard.Services
 {
@@ -10,11 +11,16 @@ namespace Management.Dashboard.Services
     {
         private readonly IUserRepository<UserModel> _repository;
         private readonly IEncryptionService _encryptionService;
+        private readonly IEmailSender _emailSender;
 
-        public UserService(IUserRepository<UserModel> userRepository, IEncryptionService encryptionService)
+        public UserService(
+            IUserRepository<UserModel> userRepository, 
+            IEncryptionService encryptionService, 
+            IEmailSender emailSender)
         {
             _repository = userRepository;
             _encryptionService = encryptionService;
+            _emailSender = emailSender;
         }
 
         public async Task<IEnumerable<UserModel>> GetUsersAsync(string tenantId, int? skip, int? limit)
@@ -42,6 +48,20 @@ namespace Management.Dashboard.Services
             newModel.Password = _encryptionService.Encrypt("Temporary!")?.Hashed;
             
             await _repository.CreateAsync(newModel);
+            await _emailSender.SendEmailAsync(newModel.Email!, "onScreenSync user account created", GetUserCreatedEmailbody(newModel));
+        }
+
+        private static string GetUserCreatedEmailbody(UserModel model)
+        {
+            var builder = new StringBuilder();
+            builder.Append($"<p>Dear {model.Name},</p>");
+            builder.Append($"<p>Welcome to onScreenSync TV Screen Management service! Welcome onboard as a content editor</p>");
+            builder.Append("<ul>");
+            builder.Append($"<li>Take some time to navigate through our platform and discover all the tools and features we offer to help you. Visit <a href='http://myscreensyncservice.runasp.net/'>Management Dashboard</a> to get started</li>");
+            builder.Append("</ul>");
+            builder.Append("<p>If you have any questions or need assistance, don't hesitate to reach out to our support team at support@onscreensync.com or visit our Help Center for <a href='https://onscreensync.com/faq.html'>FAQs and troubleshooting guides</a>.</p>");
+            builder.Append("<p>Best regards,<br />onScreenSync.com<p/>");
+            return builder.ToString();
         }
 
         private async Task<bool> UserExist(string? email)

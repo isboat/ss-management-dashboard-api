@@ -33,7 +33,7 @@ namespace Management.Dashboard.Api.Controllers
             }
 
             var data = await _historyService.GetItemHistoriesAsync(tenantId, id);
-            return data != null ? new JsonResult(data.Reverse()) : NotFound();
+            return data != null ? new JsonResult(data) : NotFound();
         }
     }
 }

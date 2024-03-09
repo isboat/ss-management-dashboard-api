@@ -38,7 +38,7 @@ namespace Management.Dashboard.Repositories
         public async Task<IEnumerable<HistoryModel>> GetItemHistoriesAsync(string tenantId, string historyItemId)
         {
             var collection = GetTenantCollection<HistoryModel>(tenantId, CollectionName);
-            return await collection.Find(x => x.TenantId == tenantId && x.ItemId == historyItemId).ToListAsync();
+            return await collection.Find(x => x.TenantId == tenantId && x.ItemId == historyItemId).SortByDescending(x => x.CreatedOn).ToListAsync();
         }
 
         public async Task<IEnumerable<HistoryModel>> GetByItemTypeAsync(string tenantId, string historyItemType, int? skip, int? limit)

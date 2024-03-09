@@ -10,6 +10,7 @@
     <PackageReference Include="AWSSDK.S3" Version="3.7.305.24" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.15.0" />
     <PackageReference Include="BCrypt.Net" Version="0.1.0" />
+    <PackageReference Include="MailKit" Version="4.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
   </ItemGroup>

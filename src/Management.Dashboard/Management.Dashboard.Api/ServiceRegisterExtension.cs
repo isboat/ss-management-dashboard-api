@@ -51,6 +51,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IPlaylistsService, PlaylistsService>();
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
             builder.Services.AddSingleton<IHistoryService, HistoryService>();
+            builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 
