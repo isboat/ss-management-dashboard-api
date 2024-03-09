@@ -3,6 +3,7 @@ using Management.Dashboard.Models.Settings;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Management.Dashboard.Repositories
 {
@@ -29,6 +30,12 @@ namespace Management.Dashboard.Repositories
 
             return await GetTenantCollection<T>(tenantId, collectionName)
                 .Find(filter).SortByDescending(x => x.UpdatedOn).ThenByDescending(x => x.CreatedOn).ThenByDescending(x => x.Id).Skip(skip).Limit(limit).ToListAsync();
+        }
+
+        protected async Task<IEnumerable<T>> GetByFilterAsync<T>(string tenantId, string collectionName, FilterDefinition<T> filter) where T : IModelItem
+        {
+            return await GetTenantCollection<T>(tenantId, collectionName)
+                .Find(filter).ToListAsync();
         }
 
         protected async Task<List<T>> GetAsync<T>(string tenantId, string collectionName)

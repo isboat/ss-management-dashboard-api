@@ -52,5 +52,8 @@ namespace Management.Dashboard.Repositories
             if (string.IsNullOrEmpty(newModel.Id)) throw new ArgumentNullException(nameof(newModel.Id));
             if (string.IsNullOrEmpty(newModel.TenantId)) throw new ArgumentNullException(nameof(newModel.TenantId));
         }
+
+        public async Task<IEnumerable<PlaylistModel>> GetByFilterAsync(string tenantId, FilterDefinition<PlaylistModel> filter) =>
+            await GetTenantCollection<PlaylistModel>(tenantId, CollectionName).Find(filter).ToListAsync();
     }
 }

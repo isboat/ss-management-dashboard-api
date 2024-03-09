@@ -19,6 +19,11 @@ namespace Management.Dashboard.Repositories
             return await GetAllByTenantIdAsync<ScreenModel>(tenantId, CollectionName, skip, limit);
         }
 
+        public async Task<IEnumerable<ScreenModel>> GetByFilterAsync(string tenantId, FilterDefinition<ScreenModel> filter)
+        {
+            return await GetByFilterAsync(tenantId, CollectionName, filter);
+        }
+
         public async Task<ScreenModel?> GetAsync(string tenantId, string id)
         {
             return await GetAsync<ScreenModel>(tenantId, CollectionName, id);

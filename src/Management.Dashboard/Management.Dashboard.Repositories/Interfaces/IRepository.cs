@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,7 @@ namespace Management.Dashboard.Repositories.Interfaces
         Task UpdateAsync(string id, T updatedModel);
 
         Task RemoveAsync(string tenantId, string id);
+
+        Task<IEnumerable<T>> GetByFilterAsync(string tenantId, FilterDefinition<T> filter);
     }
 }

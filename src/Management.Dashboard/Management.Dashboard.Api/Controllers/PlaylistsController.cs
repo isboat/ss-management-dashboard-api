@@ -3,6 +3,7 @@ using Management.Dashboard.Models;
 using Management.Dashboard.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,10 +15,14 @@ namespace Management.Dashboard.Api.Controllers
     public class PlaylistsController : CustomBaseController
     {
         private readonly IPlaylistsService _playlistsService;
+        private readonly IScreenService _screenService;
+        private readonly IPublishService _publishService;
 
-        public PlaylistsController(IPlaylistsService playlistsService)
+        public PlaylistsController(IPlaylistsService playlistsService, IScreenService screenService, IPublishService publishService)
         {
             _playlistsService = playlistsService;
+            _screenService = screenService;
+            _publishService = publishService;
         }
 
         [HttpGet("playlists")]
@@ -55,7 +60,6 @@ namespace Management.Dashboard.Api.Controllers
             return data != null ? new JsonResult(data) : NotFound();
         }
 
-
         [HttpPost("playlists")]
         public async Task<ActionResult> Post([FromBody] PlaylistModel model)
         {
@@ -72,7 +76,6 @@ namespace Management.Dashboard.Api.Controllers
             return NoContent();
         }
 
-
         [HttpPatch("playlists/{id}")]
         public async Task<ActionResult> PatchName(string id, [FromBody] PlaylistModel model)
         {
@@ -85,6 +88,32 @@ namespace Management.Dashboard.Api.Controllers
             model.TenantId = tenantId;
 
             await _playlistsService.UpdateAsync(model.Id, model);
+
+            return NoContent();
+        }
+
+        [HttpPost("playlists/{id}publish-related-screens")]
+        public async Task<ActionResult> PublishRelatedScreens(string id)
+        {
+            var tenantId = GetRequestTenantId();
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(tenantId))
+            {
+                return BadRequest();
+            }
+
+            var builder = Builders<ScreenModel>.Filter;
+            var filter = builder.Empty;
+            if (!string.IsNullOrEmpty(tenantId)) filter = builder.And(builder.Eq(r => r.TenantId, tenantId));
+            if (!string.IsNullOrEmpty(id)) filter = builder.And(builder.Eq(r => r.PlaylistId, id));
+
+            var relatedScreens = await _screenService.GetByFilterAsync(tenantId, filter);
+            if(relatedScreens == null) return NotFound();
+
+            foreach (var screen in relatedScreens)
+            {
+                _ = await _publishService.PublishScreenAsync(tenantId, screen.Id!, GetAuthorizedUserInitials());
+            }
+
 
             return NoContent();
         }

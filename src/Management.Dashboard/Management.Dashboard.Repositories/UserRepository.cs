@@ -3,6 +3,7 @@ using Management.Dashboard.Models.Settings;
 using Management.Dashboard.Repositories.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System.Collections;
 
 namespace Management.Dashboard.Repositories
 {
@@ -72,5 +73,10 @@ namespace Management.Dashboard.Repositories
 
         public async Task RemoveAsync(string tenantId, string id) =>
             await _collection.DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
+
+        public async Task<IEnumerable<UserModel>> GetByFilterAsync(string tenantId, FilterDefinition<UserModel> filter)
+        {
+            return await _collection.Find(filter).ToListAsync();
+        }
     }
 }

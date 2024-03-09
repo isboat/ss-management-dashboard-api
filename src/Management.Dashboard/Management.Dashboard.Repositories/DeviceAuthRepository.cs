@@ -85,5 +85,10 @@ namespace Management.Dashboard.Repositories
         {
             var result = await _collection.DeleteOneAsync(x => x.Id == id && x.TenantId == tenantId);
         }
+
+        public async Task<IEnumerable<DeviceAuthModel>> GetByFilterAsync(string tenantId, FilterDefinition<DeviceAuthModel> filter)
+        {
+            return await _collection.Find(filter).ToListAsync();
+        }
     }
 }

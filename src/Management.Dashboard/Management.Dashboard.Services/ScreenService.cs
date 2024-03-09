@@ -2,6 +2,7 @@
 using Management.Dashboard.Models.History;
 using Management.Dashboard.Repositories.Interfaces;
 using Management.Dashboard.Services.Interfaces;
+using MongoDB.Driver;
 
 namespace Management.Dashboard.Services
 {
@@ -18,6 +19,11 @@ namespace Management.Dashboard.Services
 
         public async Task<IEnumerable<ScreenModel>> GetScreensAsync(string tenantId, int? skip, int? limit) =>
             await _repository.GetAllByTenantIdAsync(tenantId, skip, limit);
+
+        public async Task<IEnumerable<ScreenModel>> GetByFilterAsync(string tenantId, FilterDefinition<ScreenModel> filter)
+        {
+            return await _repository.GetByFilterAsync(tenantId, filter);
+        }
 
         public async Task<ScreenModel?> GetAsync(string tenantId, string id)
         {

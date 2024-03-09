@@ -1,4 +1,5 @@
 ﻿using Management.Dashboard.Models;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,7 @@ namespace Management.Dashboard.Services.Interfaces
         public Task UpdateAsync(string id, ScreenModel updatedModel, string updator);
 
         public Task RemoveAsync(string tenantId, string id, string deletor);
+
+        Task<IEnumerable<ScreenModel>> GetByFilterAsync(string tenantId, FilterDefinition<ScreenModel> filter);
     }
 }
