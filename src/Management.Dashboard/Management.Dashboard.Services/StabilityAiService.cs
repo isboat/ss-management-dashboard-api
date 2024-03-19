@@ -21,7 +21,7 @@ namespace Management.Dashboard.Services
 
         public async Task<string?> GenerateAsync(string inputText, string tenantId)
         {
-            var url = await ExecuteImagePrompt(inputText);
+            var url = await ExecuteImagePrompt(inputText, tenantId);
             return url;
         }
 
@@ -37,7 +37,7 @@ namespace Management.Dashboard.Services
             return path;
         }
 
-        private async Task<string?> ExecuteImagePrompt(string prompt)
+        private async Task<string?> ExecuteImagePrompt(string prompt, string tenantId)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace Management.Dashboard.Services
 
                         var dataByte = Convert.FromBase64String(artifact.Base64!);
 
-                        return await DownloadImageAsync("images", "imageFile", dataByte);
+                        return await DownloadImageAsync(GetTenantIdTmpDirectoryPath(tenantId), GetTenantIdTmpFilePath(prompt), dataByte);
                     }
                 }
                 else
@@ -87,6 +87,19 @@ namespace Management.Dashboard.Services
 
             return null;
         }
+
+        private static string GetTenantIdTmpFilePath(string prompt)
+        {
+            var tmpName = prompt ?? "tmpfilename";
+            tmpName = tmpName.ToLowerInvariant().Replace(" ","").Substring(0, 15);
+
+            return tmpName;
+        }
+
+        private static string GetTenantIdTmpDirectoryPath(string tenantId)
+        {
+            return $"images-{tenantId}";
+        }
     }
 
     public class ImageRequest
@@ -96,11 +109,11 @@ namespace Management.Dashboard.Services
 
 
         [JsonProperty("width")]
-        public int Width { get; set; } = 1024;
+        public int Width { get; set; } = 1216; //1024;
 
 
         [JsonProperty("height")]
-        public int Height { get; set; } = 1024;
+        public int Height { get; set; } = 832; // 1024;
 
 
         [JsonProperty("seed")]

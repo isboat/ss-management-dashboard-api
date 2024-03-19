@@ -12,7 +12,7 @@ namespace Management.Dashboard.Api.Controllers
 {
     [Route("api/v1/tenant")]
     [ApiController]
-    [Authorize(Policy = TenantAuthorization.RequiredPolicy)]
+    //[Authorize(Policy = TenantAuthorization.RequiredPolicy)]
     public class MediaController : CustomBaseController
     {
         private readonly IUploadService _uploadService;

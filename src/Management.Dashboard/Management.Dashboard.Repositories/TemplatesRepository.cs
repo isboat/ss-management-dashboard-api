@@ -21,7 +21,7 @@ namespace Management.Dashboard.Repositories
                 case TemplateKeys.MediaTopAndMenuBottom:
                     return MenuOverlayProperties();
                 case TemplateKeys.MenuOnly:
-                    return MenuOverlayProperties();
+                    return MenuOnlyProperties();
                 case TemplateKeys.Text:
                     return TextProperties();
                 case TemplateKeys.DateTime:
@@ -37,11 +37,22 @@ namespace Management.Dashboard.Repositories
 
         private static IEnumerable<TemplatePropertyModel> MenuOverlayProperties()
         {
-            return new List<TemplatePropertyModel> 
+            var menuOnlyProperties = MenuOnlyProperties().ToList();
+            menuOnlyProperties.AddRange(new List<TemplatePropertyModel> 
             { 
+                new() { Key = "backgroundOpacity", Label = "Background Opacity" }
+            });
+
+            return menuOnlyProperties;
+        }
+
+        private static IEnumerable<TemplatePropertyModel> MenuOnlyProperties()
+        {
+            return new List<TemplatePropertyModel>
+            {
                 new TemplatePropertyModel{ Key = "textColor", Label = "Text Color" },
                 new TemplatePropertyModel { Key = "textFont", Label = "Text Font" },
-                new TemplatePropertyModel { Key = "backgroundOpacity", Label = "Background Opacity" }
+                new TemplatePropertyModel { Key = "backgroundColor", Label = "Background Color" }
             };
         }
 
