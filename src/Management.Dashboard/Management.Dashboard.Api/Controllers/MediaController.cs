@@ -94,6 +94,14 @@ namespace Management.Dashboard.Api.Controllers
                 var file = System.IO.File.OpenRead(aiImagePath);
                 storagePath = await _uploadService.UploadAsync(tenantId, fileName, file);
                 isImageFile = true;
+                try
+                {
+                    System.IO.File.Delete(aiImagePath);
+                }
+                catch (Exception ex)
+                {
+                    // log error;
+                }
             }
             else
             {

@@ -27,6 +27,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<ITenantRepository, TenantRepository>();
             builder.Services.AddSingleton<IPublishRepository, PublishRepository>();
             builder.Services.AddSingleton<IHistoryRepository, HistoryRepository>();
+            builder.Services.AddSingleton<IRegisterationRepository, RegisterationRepository>();
 
             var objectSerializer = new ObjectSerializer(
                 type => ObjectSerializer.DefaultAllowedTypes(type)
@@ -52,6 +53,7 @@ namespace Management.Dashboard.Api
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
             builder.Services.AddSingleton<IHistoryService, HistoryService>();
             builder.Services.AddSingleton<IEmailSender, EmailSender>();
+            builder.Services.AddSingleton<IRegisterationService, RegisterationService>();
 
             builder.Services.AddSingleton<IContainerClientFactory, ContainerClientFactory>();
 

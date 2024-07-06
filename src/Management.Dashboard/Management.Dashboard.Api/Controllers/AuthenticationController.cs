@@ -14,10 +14,12 @@ namespace Management.Dashboard.Api.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly ILoginService _userAuthenticationService;
+        private readonly IRegisterationService _registerationService;
 
-        public AuthenticationController(ILoginService userAuthenticationService)
+        public AuthenticationController(ILoginService userAuthenticationService, IRegisterationService registerationService)
         {
             _userAuthenticationService = userAuthenticationService;
+            _registerationService = registerationService;
         }
 
         // POST api/<Login>
@@ -33,6 +35,19 @@ namespace Management.Dashboard.Api.Controllers
                 }
 
                 return Unauthorized();
+            }
+
+            return BadRequest();
+        }
+
+        // POST api/<Login>
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _registerationService.Register(model);
+                return NoContent();
             }
 
             return BadRequest();
