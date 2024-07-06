@@ -41,6 +41,7 @@ namespace Management.Dashboard.Repositories
         public async Task CreateAsync(RegisterModel newModel)
         {
             newModel.Created = DateTime.UtcNow;
+            newModel.Id = Guid.NewGuid().ToString("N");
             await _collection.InsertOneAsync(newModel);
         }
 

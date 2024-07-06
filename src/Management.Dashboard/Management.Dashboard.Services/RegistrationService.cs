@@ -22,7 +22,7 @@ namespace Management.Dashboard.Services
             {
                 var dbUser = await _registerationRepository.GetByEmailAsync(model.Email!);
                 if (dbUser != null) return;
-
+                                
                 await _registerationRepository.CreateAsync(model);
             }
         }
