@@ -8,19 +8,19 @@ using System.Collections;
 
 namespace Management.Dashboard.Repositories
 {
-    public class RegisterationRepository : IRegisterationRepository
+    public class RegistrationRepository : IRegistrationRepository
     {
         private readonly IMongoCollection<RegisterModel> _collection;
         private readonly MongoClient _client;
 
-        public RegisterationRepository(IOptions<MongoSettings> settings)
+        public RegistrationRepository(IOptions<MongoSettings> settings)
         {
             _client = new MongoClient(
             settings.Value.ConnectionString);
 
             var mongoDatabase = _client.GetDatabase("TenantAdmin");
 
-            _collection = mongoDatabase.GetCollection<RegisterModel>("Registerations");
+            _collection = mongoDatabase.GetCollection<RegisterModel>("Registrations");
         }
 
         public async Task<List<RegisterModel>> GetAllByTenantIdAsync(string tenantId, int? skip, int? limit)

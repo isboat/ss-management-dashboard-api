@@ -6,12 +6,12 @@ using Management.Dashboard.Services.Interfaces;
 
 namespace Management.Dashboard.Services
 {
-    public class RegisterationService : IRegisterationService
+    public class RegistrationService : IRegistrationService
     {
-        private readonly IRegisterationRepository _registerationRepository;
+        private readonly IRegistrationRepository _registerationRepository;
 
-        public RegisterationService(
-            IRegisterationRepository userRepository)
+        public RegistrationService(
+            IRegistrationRepository userRepository)
         {
             _registerationRepository = userRepository;
         }

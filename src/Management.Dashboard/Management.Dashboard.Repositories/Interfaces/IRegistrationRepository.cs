@@ -2,7 +2,7 @@
 
 namespace Management.Dashboard.Repositories.Interfaces
 {
-    public interface IRegisterationRepository : IRepository<RegisterModel>
+    public interface IRegistrationRepository : IRepository<RegisterModel>
     {
         Task<RegisterModel?> GetByEmailAsync(string email);
     }

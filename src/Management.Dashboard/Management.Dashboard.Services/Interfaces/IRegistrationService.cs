@@ -2,7 +2,7 @@
 
 namespace Management.Dashboard.Services.Interfaces
 {
-    public interface IRegisterationService
+    public interface IRegistrationService
     {
         Task Register(RegisterModel model);
     }
